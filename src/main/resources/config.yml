@@ -1,0 +1,25 @@
+#Echo configuration file.
+#You must put your Echo API key.
+#If you don't have an enterprise plan, freeze command will not work.
+
+API_KEY: ""
+
+NO_PERMISSION: "&cNo permission"
+
+ALTS_COMMAND:
+  ENABLED: true
+  NOT_ALTS_MESSAGE: "&cCouldn't find any alts"
+  START_MESSAGE: "Searching Echo for aliases of {player}..." #Placeholders: {player}
+  FINISH_MESSAGE: "{alts}" #Placeholders: {alts}
+FREEZE_MESSAGE:
+  ENABLED: true
+  PLAYER_MOVE_EVENT: false
+  AUTOBAN_AFTER_TIME: false
+  TIME_BEFORE_AUTOBAN: 300 #time in seconds before automatic ban (default: 5 minutes)
+  AUTOBAN_COMMAND: "/ban {player} Refusal to SS" #Placeholders: {player}
+  MESSAGE: "&c&lYou are frozen!&c Please download echo here: {link}" #Placeholders: {player}
+  SEND_MESSAGE_EVERY: 5 #time in seconds to send the freeze message (default: every 5 seconds)
+  STAFF_STARTED_MESSAGE: "&a&lStarted! &a{player} has downloaded and ran echo, now scanning!"
+  STAFF_RESULT_MESSAGE: "&a&lScan complete! &aResults: {link}" #Placeholders: {link}
+ECHO_COMMAND:
+  ENABLED: true

@@ -1,0 +1,9 @@
+name: Echoffgd
+version: 1.0
+description: shit plugin
+main: ac.echo.Echo
+author: Incrementing, Forseeable
+
+commands:
+  echo:
+    description: echo command
