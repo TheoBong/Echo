@@ -1,5 +1,6 @@
 package ac.echo.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,8 +19,8 @@ public class EchoCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         String enterprise = echo.getEnterprise() ? "Enterprise" : "Personal";
 
-        sender.sendMessage("This version of Echo is licensed to " + echo.getUsername());
-        sender.sendMessage("Current plan: " + enterprise);
+        sender.sendMessage("This version of Echo is licensed to " + ChatColor.AQUA + echo.getUsername());
+        sender.sendMessage(ChatColor.GRAY + "Current plan: " + enterprise);
 
         return true;
     }

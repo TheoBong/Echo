@@ -1,7 +1,6 @@
 package ac.echo.commands;
 
 import ac.echo.Echo;
-import ac.echo.Locale;
 import ac.echo.classes.API;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
@@ -19,7 +18,8 @@ public class AltsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (!sender.hasPermission("echo.alts")) {
-            sender.sendMessage(Locale.NO_PERMISSION.format());
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    echo.getConfig().getString("NO_PERMISSION")));
             return true;
         }
 
@@ -34,15 +34,21 @@ public class AltsCommand implements CommandExecutor {
 
     private void getAlts(String p, CommandSender sender) {
         new Thread(() -> {
-            sender.sendMessage(Locale.ALTS_START_MESSAGE.format().replace("{player}", p));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    echo.getConfig().getString("ALTS_COMMAND.START_MESSAGE")
+                    .replace("{player}", p)));
+
             API api = new API();
 
             String final_alt_list = String.join(", ", api.getAlts(echo.getApikey(), p, sender));;
 
             if (!final_alt_list.contains(", ")) {
-                sender.sendMessage(Locale.NO_ALTS_MESSAGE.format());
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        echo.getConfig().getString("ALTS_COMMAND.NO_ALTS_MESSAGE")));
             } else {
-                sender.sendMessage(Locale.ALTS_FINISH_MESSAGE.format().replace("{alts}", final_alt_list));
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        echo.getConfig().getString("ALTS_COMMAND.FINISH_MESSAGE")
+                        .replace("{alts}", final_alt_list)));
             }
         }).start();
     }

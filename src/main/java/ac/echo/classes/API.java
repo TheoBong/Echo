@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import ac.echo.Echo;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.json.simple.JSONArray;
@@ -107,8 +108,16 @@ public class API {
             JSONObject json_response = (JSONObject) response;
             
             if ((Boolean)json_response.get("success")) {
-                String username = (String)((JSONObject)json_response.get("result")).get("username");
+                String username = (String) ((JSONObject) json_response.get("result")).get("username");
+
+                JSONObject result = (JSONObject) json_response.get("result");
+                JSONObject plan = (JSONObject) result.get("plan");
+                String name = (String) plan.get("name");
+                Boolean enterprise = name.equals("Enterprise");
+
+                Echo.INSTANCE.setEnterprise(enterprise);
                 Echo.INSTANCE.setUsername(username);
+
                 System.out.println("Authenticated Echo API key! Licensed to: " + username);
                 return true;
             } else {
