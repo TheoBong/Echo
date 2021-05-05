@@ -1,6 +1,7 @@
 package ac.echo.classes;
 
 import ac.echo.Echo;
+import ac.echo.profile.Profile;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -13,7 +14,7 @@ import java.io.IOException;
 public class EchoClient {
     private static final String SERVER = "wss://scanner.echo.ac";
 
-    public static WebSocket connect(String pin, CommandSender staff) throws IOException, WebSocketException {
+    public static WebSocket connect(String pin, CommandSender staff, Player target) throws IOException, WebSocketException {
         String text = pin + "|no|progress";
 
         return new WebSocketFactory()
@@ -36,6 +37,8 @@ public class EchoClient {
                                 staff.sendMessage("https://scan.echo.ac/" + api.getLastScan(Echo.INSTANCE.getApikey(), staff));
                                 websocket.sendClose();
                             } else if (progress.equals("STARTED")) {
+                                Profile profile = Echo.INSTANCE.getProfileManager().getProfile(target.getUniqueId());
+                                profile.setStarted(true);
                                 staff.sendMessage("Player started scanning!");
                             } else {
                                 staff.sendMessage("Progress: " + progress + "%");

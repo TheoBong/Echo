@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public class Profile {
     @Getter @Setter private boolean frozen = false;
+    @Getter @Setter private boolean started = false;
     private final String name;
     private final UUID uuid;
 

@@ -6,7 +6,6 @@ import ac.echo.classes.EchoClient;
 import ac.echo.commands.BaseCommand;
 import ac.echo.profile.Profile;
 import com.neovisionaries.ws.client.WebSocketException;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -19,6 +18,10 @@ import java.io.IOException;
 public class FreezeCommand extends BaseCommand {
 
     private Echo echo;
+
+    private boolean wasFlying = false;
+    private float walkSpeed = 0.2F;
+    private int foodLevel = 20;
 
     public FreezeCommand(Echo echo) {
         super("freeze");
@@ -47,10 +50,6 @@ public class FreezeCommand extends BaseCommand {
 
         Profile profile = echo.getProfileManager().getProfile(target.getUniqueId());
 
-        boolean wasFlying = false;
-        float walkSpeed = 0.2F;
-        int foodLevel = 20;
-
         if (!profile.isFrozen()) {
             profile.setFrozen(true);
             sender.sendMessage(ChatColor.GREEN + "Successfully froze " + target.getName());
@@ -68,16 +67,16 @@ public class FreezeCommand extends BaseCommand {
             getPin(sender, target);
         } else {
             profile.setFrozen(false);
+            profile.setStarted(false);
             sender.sendMessage(ChatColor.GREEN + "Successfully unfroze " + target.getName());
 
+            target.sendMessage(ChatColor.GREEN + "You have been unfrozen.");
             target.setFlying(wasFlying);
             target.setWalkSpeed(walkSpeed);
             target.setFoodLevel(foodLevel);
             target.setSprinting(true);
             target.removePotionEffect(PotionEffectType.JUMP);
         }
-
-        return;
     }
 
     private void getPin(CommandSender sender, Player target){
@@ -86,14 +85,32 @@ public class FreezeCommand extends BaseCommand {
         String pin = api.getPin(echo.getApikey(), sender);
         String link = api.getLink(echo.getApikey(), sender);
 
-        target.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                echo.getConfig().getString("FREEZE_COMMAND.START_MESSAGE")
-                        .replace("{link}", link)));
-
         long expiry = System.currentTimeMillis() + echo.getConfig().getInt("FREEZE_COMMAND.AUTOBAN.TIME_BEFORE_AUTOBAN");
 
+        if (echo.getConfig().getBoolean("FREEZE_COMMAND.AUTOBAN.ENABLED")) {
+            target.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
+                            .replace("{link}", link).replace("{countdown}", "" + (expiry - System.currentTimeMillis())/1000)));
+        } else {
+            target.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
+                            .replace("{link}", link)));
+        }
+
         new Thread(() -> {
-            for (int i = 0; i < 60; i++) {
+            while (true) {
+                try {
+                    Thread.sleep(echo.getConfig().getInt("FREEZE_COMMAND.SEND_MESSAGE_EVERY"));
+                } catch (InterruptedException e) {
+                    Bukkit.getLogger().warning(e.getMessage());
+                    e.printStackTrace();
+                }
+
+                Profile profile = echo.getProfileManager().getProfile(target.getUniqueId());
+                if (!profile.isFrozen() || profile.isStarted()) {
+                    break;
+                }
+
                 if (echo.getConfig().getBoolean("FREEZE_COMMAND.AUTOBAN.ENABLED")) {
                     if (System.currentTimeMillis() > expiry) {
                         CommandSender sender1 = echo.getConfig().getBoolean("FREEZE_COMMAND.AUTOBAN.AUTOBAN_COMMAND_CONSOLE") ? Bukkit.getServer().getConsoleSender() : sender;
@@ -102,20 +119,20 @@ public class FreezeCommand extends BaseCommand {
                     }
                 }
 
-                try {
-                    Thread.sleep(echo.getConfig().getInt("FREEZE_COMMAND.SEND_MESSAGE_EVERY"));
-                } catch (InterruptedException e) {
-                    Bukkit.getLogger().warning(e.getMessage());
-                    e.printStackTrace();
+                if (echo.getConfig().getBoolean("FREEZE_COMMAND.AUTOBAN.ENABLED")) {
+                    target.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
+                                    .replace("{link}", link).replace("{countdown}", "" + (expiry - System.currentTimeMillis())/1000)));
+                } else {
+                    target.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
+                                    .replace("{link}", link)));
                 }
-                target.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        echo.getConfig().getString("FREEZE_COMMAND.START_MESSAGE")
-                                .replace("{link}", link)));
             }
         }).start();
 
         try {
-            EchoClient.connect(pin, sender);
+            EchoClient.connect(pin, sender, target);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (WebSocketException e) {
