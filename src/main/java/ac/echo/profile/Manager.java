@@ -1,6 +1,7 @@
 package ac.echo.profile;
 
 import ac.echo.Echo;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class Manager {
         return playerProfile;
     }
 
+    @Getter
     private final HashMap<UUID, Profile> uuidProfiles = new HashMap<>();
 
     public Profile getProfile(final Player player) {

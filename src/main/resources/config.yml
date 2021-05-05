@@ -2,7 +2,7 @@
 #You must put your Echo API key.
 #If you don't have an enterprise plan, freeze command will not work.
 
-API_KEY: ""
+SERVER_API_KEY: "" #This is the API key that console uses. Only 1 concurrent scan can be run at a time on this API key.
 
 NO_PERMISSION: "&cNo permission"
 

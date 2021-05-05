@@ -36,7 +36,7 @@ public class AltsCommand extends BaseCommand {
     private void getAlts(String p, CommandSender sender) {
         new Thread(() -> {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    echo.getConfig().getString("ALTS_COMMAND.MESSAGE")
+                    echo.getConfig().getString("ALTS_COMMAND.START_MESSAGE")
                     .replace("{player}", p)));
 
             API api = new API();

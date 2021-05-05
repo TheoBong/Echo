@@ -69,7 +69,7 @@ public class API {
     public ArrayList<String> getAlts(String key, String username, CommandSender sender) {
         String meResponse = getRequest("https://api.echo.ac/query/player?key=" + key + "&player=" + username);
 
-        if (meResponse == "") {
+        if (meResponse.equals("")) {
             sender.sendMessage(ChatColor.RED + "Couldn't reach Echo servers (API DOWN?).");
             return null;
         }
@@ -97,7 +97,7 @@ public class API {
     public String getPin(String key, CommandSender sender) {
         String meResponse = getRequest("https://api.echo.ac/query/pin?key=" + key );
 
-        if(meResponse == ""){
+        if(meResponse.equals("")){
             sender.sendMessage(ChatColor.RED + "Couldn't reach Echo servers (API DOWN?).");
             return null;
         }
@@ -156,7 +156,7 @@ public class API {
     public String getLink(String key, CommandSender sender){
         String meResponse = getRequest("https://api.echo.ac/query/pin?key=" + key );
 
-        if(meResponse == ""){
+        if(meResponse.equals("")){
             sender.sendMessage(ChatColor.RED + "Couldn't reach Echo servers (API DOWN?).");
             return null;
         }
@@ -181,10 +181,39 @@ public class API {
         }
     }
 
+    public String styleCode(String key) {
+        String meResponse = getRequest("https://api.echo.ac/query/me?key=" + key);
+
+        if(meResponse.equals("")) {
+            System.out.println("Couldn't reach Echo servers (API DOWN?).");
+            return "";
+        }
+
+        try {
+            JSONParser parser = new JSONParser();
+            Object response = parser.parse(meResponse);
+
+            JSONObject json_response = (JSONObject) response;
+
+            if ((Boolean)json_response.get("success")) {
+                String stylecode = (String) ((JSONObject) json_response.get("result")).get("styler_code");
+                return stylecode;
+            } else {
+                System.out.println("Error from Echo servers: " + (String) json_response.get("message"));
+                return "";
+            }
+
+        } catch (ParseException e) {
+            Bukkit.getLogger().warning(e.getMessage());
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     public Boolean isValidKey(String key) {
         String meResponse = getRequest("https://api.echo.ac/query/me?key=" + key);
 
-        if(meResponse == "") {
+        if(meResponse.equals("")) {
             System.out.println("Couldn't reach Echo servers (API DOWN?).");
             return false;
         }

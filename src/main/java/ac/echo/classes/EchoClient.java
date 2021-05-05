@@ -6,6 +6,7 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -28,18 +29,30 @@ public class EchoClient {
                         }
 
                         if (message.startsWith("NEW_PROGRESS$")) {
+                            System.out.println(message);
+
+                            Profile profile = Echo.INSTANCE.getProfileManager().getProfile(target.getUniqueId());
+                            if (!profile.isFrozen()) {
+                                websocket.sendClose();
+                            }
+
                             String progress = message.split("\\$")[1];
 
                             if (progress.equals("FINISHED")) {
                                 API api = new API();
+                                String link = "https://scan.echo.ac/" + api.getLastScan(Echo.INSTANCE.getApikey(), staff);
 
-                                staff.sendMessage("Scan complete! Here is link:");
-                                staff.sendMessage("https://scan.echo.ac/" + api.getLastScan(Echo.INSTANCE.getApikey(), staff));
-                                websocket.sendClose();
+                                staff.sendMessage("test");
+                                staff.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        Echo.INSTANCE.getConfig().getString("FREEZE_COMMAND.STAFF_RESULT_MESSAGE")
+                                                .replace("{link}", link)));
                             } else if (progress.equals("STARTED")) {
-                                Profile profile = Echo.INSTANCE.getProfileManager().getProfile(target.getUniqueId());
                                 profile.setStarted(true);
-                                staff.sendMessage("Player started scanning!");
+
+                                staff.sendMessage("test");
+                                staff.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        Echo.INSTANCE.getConfig().getString("FREEZE_COMMAND.STAFF_STARTED_MESSAGE")
+                                                .replace("{player}", target.getName())));
                             } else {
                                 staff.sendMessage("Progress: " + progress + "%");
                             }

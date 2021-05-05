@@ -9,11 +9,13 @@ import com.neovisionaries.ws.client.WebSocketException;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
+import java.util.Base64;
 
 public class FreezeCommand extends BaseCommand {
 
@@ -36,12 +38,37 @@ public class FreezeCommand extends BaseCommand {
             return;
         }
 
-        if (args.length != 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: /freeze <player>");
+        if (sender instanceof Player) {
+            Player staff = (Player) sender;
+            if (echo.getStorage().getKey(staff.getUniqueId().toString()) == null) {
+                staff.sendMessage(ChatColor.RED + "Please specify your API key using /key <api-key>");
+                return;
+            }
+
+            Profile profile = echo.getProfileManager().getProfile(staff.getUniqueId());
+            if (profile.isScanning()) {
+                staff.sendMessage(ChatColor.RED + "You may only freeze 1 person at a time.");
+                return;
+            }
+        }
+
+        if (args.length == 0) {
+            sender.sendMessage(ChatColor.RED + "Usage: /freeze <player> [pin]");
+            return;
+        }
+
+        if (args.length > 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /freeze <player> [pin]");
             return;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
+
+        String pin = null;
+
+        if (args.length == 2) {
+            pin = args[1];
+        }
 
         if (target == null) {
             sender.sendMessage(ChatColor.RED + "Can't find player!");
@@ -64,7 +91,26 @@ public class FreezeCommand extends BaseCommand {
             target.setSprinting(false);
             target.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
 
-            getPin(sender, target);
+            if (pin != null) {
+                API api = new API();
+                if (sender instanceof Player) {
+                    Player staff = (Player) sender;
+                    String style = api.styleCode(echo.getStorage().getKey(staff.getUniqueId().toString()));
+
+                    String encodedString = Base64.getEncoder().encodeToString(pin.getBytes());
+
+                    String link = "https://dl.echo.ac/" + style + "-" + encodedString;
+                    getPin(link, pin, sender, target);
+                } else {
+                    String style = api.styleCode(echo.getApikey());
+                    String encodedString = Base64.getEncoder().encodeToString(pin.getBytes());
+
+                    String link = "https://dl.echo.ac/" + style + "-" + encodedString;
+                    getPin(link, pin, sender, target);
+                }
+            } else {
+                getPin(null, null, sender, target);
+            }
         } else {
             profile.setFrozen(false);
             profile.setStarted(false);
@@ -79,11 +125,20 @@ public class FreezeCommand extends BaseCommand {
         }
     }
 
-    private void getPin(CommandSender sender, Player target){
+    private void getPin(String link, String pin, CommandSender sender, Player target){
         API api = new API();
 
-        String pin = api.getPin(echo.getApikey(), sender);
-        String link = api.getLink(echo.getApikey(), sender);
+        if (link == null) {
+            if (sender instanceof ConsoleCommandSender) {
+                pin = api.getPin(echo.getApikey(), sender);
+                link = api.getLink(echo.getApikey(), sender);
+            } else {
+                Player staff = (Player) sender;
+
+                pin = api.getPin(echo.getStorage().getKey(staff.getUniqueId().toString()), sender);
+                link = api.getLink(echo.getStorage().getKey(staff.getUniqueId().toString()), sender);
+            }
+        }
 
         long expiry = System.currentTimeMillis() + echo.getConfig().getInt("FREEZE_COMMAND.AUTOBAN.TIME_BEFORE_AUTOBAN");
 
@@ -97,6 +152,7 @@ public class FreezeCommand extends BaseCommand {
                             .replace("{link}", link)));
         }
 
+        String finalLink = link;
         new Thread(() -> {
             while (true) {
                 try {
@@ -122,11 +178,11 @@ public class FreezeCommand extends BaseCommand {
                 if (echo.getConfig().getBoolean("FREEZE_COMMAND.AUTOBAN.ENABLED")) {
                     target.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
-                                    .replace("{link}", link).replace("{countdown}", "" + (expiry - System.currentTimeMillis())/1000)));
+                                    .replace("{link}", finalLink).replace("{countdown}", "" + (expiry - System.currentTimeMillis())/1000)));
                 } else {
                     target.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
-                                    .replace("{link}", link)));
+                                    .replace("{link}", finalLink)));
                 }
             }
         }).start();
