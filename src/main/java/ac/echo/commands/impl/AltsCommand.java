@@ -1,46 +1,47 @@
-package ac.echo.commands;
+package ac.echo.commands.impl;
 
 import ac.echo.Echo;
 import ac.echo.classes.API;
+import ac.echo.commands.BaseCommand;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class AltsCommand implements CommandExecutor {
+public class AltsCommand extends BaseCommand {
 
     private Echo echo;
 
     public AltsCommand(Echo echo) {
+        super("alts");
         this.echo = echo;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission("echo.alts")) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     echo.getConfig().getString("NO_PERMISSION")));
-            return true;
+            return;
         }
 
         if (args.length != 1) {
             sender.sendMessage(ChatColor.RED + "Usage: /alts <player>");
-            return true;
+            return;
         }
 
         getAlts(args[0], sender);
-        return true;
     }
 
     private void getAlts(String p, CommandSender sender) {
         new Thread(() -> {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    echo.getConfig().getString("ALTS_COMMAND.START_MESSAGE")
+                    echo.getConfig().getString("ALTS_COMMAND.MESSAGE")
                     .replace("{player}", p)));
 
             API api = new API();
 
-            String final_alt_list = String.join(", ", api.getAlts(echo.getApikey(), p, sender));;
+            String final_alt_list = String.join(", ", api.getAlts(echo.getApikey(), p, sender));
 
             if (!final_alt_list.contains(", ")) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&',

@@ -13,6 +13,7 @@ import ac.echo.Echo;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -83,6 +84,93 @@ public class API {
                 return (JSONArray) ((JSONObject)json_response.get("result")).get("alts");
             } else {
                 sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + (String) json_response.get("message") + ".");
+                return null;
+            }
+
+        } catch (ParseException e) {
+            Bukkit.getLogger().warning(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getPin(String key, CommandSender sender) {
+        String meResponse = getRequest("https://api.echo.ac/query/pin?key=" + key );
+
+        if(meResponse == ""){
+            sender.sendMessage(ChatColor.RED + "Couldn't reach Echo servers (API DOWN?).");
+            return null;
+        }
+
+        try {
+            JSONParser parser = new JSONParser();
+            Object response = parser.parse(meResponse);
+
+            JSONObject json_response = (JSONObject)response;
+
+            if((Boolean)json_response.get("success")){
+                return (String) ((JSONObject)json_response.get("result")).get("pin");
+            } else {
+                sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + (String)json_response.get("message") + ".");
+                return null;
+            }
+
+        } catch (ParseException e) {
+            Bukkit.getLogger().warning(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getLastScan(String key, CommandSender sender){
+        String meResponse = getRequest("https://api.echo.ac/query/scans?key=" + key + "&length=1");
+
+        if(meResponse.equals("")){
+            sender.sendMessage(ChatColor.RED + "Couldn't reach Echo servers (API DOWN?).");
+            return null;
+        }
+
+        try {
+            JSONParser parser = new JSONParser();
+            Object response = parser.parse(meResponse);
+
+            JSONObject json_response = (JSONObject)response;
+
+            if ((Boolean)json_response.get("success")){
+                JSONArray array = (JSONArray) ((JSONObject)json_response.get("result")).get("scans");
+                String uuid = String.join("", array);
+                System.out.println(uuid);
+                return uuid;
+            } else {
+                sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + (String)json_response.get("message") + ".");
+                return null;
+            }
+
+        } catch (ParseException e) {
+            Bukkit.getLogger().warning(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getLink(String key, CommandSender sender){
+        String meResponse = getRequest("https://api.echo.ac/query/pin?key=" + key );
+
+        if(meResponse == ""){
+            sender.sendMessage(ChatColor.RED + "Couldn't reach Echo servers (API DOWN?).");
+            return null;
+        }
+
+        try {
+            JSONParser parser = new JSONParser();
+            Object response = parser.parse(meResponse);
+
+            JSONObject json_response = (JSONObject)response;
+
+            if((Boolean)json_response.get("success")){
+                return (String) ((JSONObject)json_response.get("result")).get("link");
+            } else {
+                sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + (String)json_response.get("message") + ".");
                 return null;
             }
 
