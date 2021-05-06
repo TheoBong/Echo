@@ -91,6 +91,21 @@ public class Storage {
 
     }
 
+    public String getConsole(){
+        if(!users.containsKey("console")){
+            return null;
+        }
+        return users.get("console");
+    }
+
+    public void addConsole(String key) {
+        users.put("console", key);
+
+        new Thread(() -> {
+            exportConfig();
+        }).start();
+    }
+
     public String getKey(String uuid){
         if(!users.containsKey(uuid)){
             return null;

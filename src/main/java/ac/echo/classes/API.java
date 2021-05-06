@@ -135,7 +135,6 @@ public class API {
             Object response = parser.parse(meResponse);
 
             JSONObject json_response = (JSONObject)response;
-            System.out.println(json_response);
 
             if ((Boolean)json_response.get("success")){
                 String scan = (String) ((JSONObject)json_response.get("result")).get("scans");
@@ -153,7 +152,7 @@ public class API {
     }
 
     public String getLink(String key, CommandSender sender){
-        String meResponse = getRequest("https://api.echo.ac/query/pin?key=" + key );
+        String meResponse = getRequest("https://api.echo.ac/query/pin?key=" + key);
 
         if(meResponse.equals("")){
             sender.sendMessage(ChatColor.RED + "Couldn't reach Echo servers (API DOWN?).");
@@ -224,20 +223,9 @@ public class API {
             JSONObject json_response = (JSONObject) response;
             
             if ((Boolean)json_response.get("success")) {
-                String username = (String) ((JSONObject) json_response.get("result")).get("username");
-
-                JSONObject result = (JSONObject) json_response.get("result");
-                JSONObject plan = (JSONObject) result.get("plan");
-                String name = (String) plan.get("name");
-                Boolean enterprise = name.equals("Enterprise");
-
-                Echo.INSTANCE.setEnterprise(enterprise);
-                Echo.INSTANCE.setUsername(username);
-
-                System.out.println("Authenticated Echo API key! Licensed to: " + username);
                 return true;
             } else {
-                System.out.println("Error from Echo servers: " + (String)json_response.get("message"));
+                System.out.println("Error from Echo servers: " + (String) json_response.get("message"));
                 return false;
             }
 

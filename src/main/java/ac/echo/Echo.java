@@ -1,19 +1,14 @@
 package ac.echo;
 
-import ac.echo.classes.API;
 import ac.echo.classes.Storage;
 import ac.echo.commands.BaseCommand;
-import ac.echo.commands.impl.AltsCommand;
-import ac.echo.commands.impl.FreezeCommand;
-import ac.echo.commands.impl.KeyCommand;
+import ac.echo.commands.impl.*;
 import ac.echo.listeners.DisconnectEvent;
 import ac.echo.listeners.FreezeListener;
 import ac.echo.listeners.LoginEvent;
 import ac.echo.listeners.MoveEvent;
 import ac.echo.profile.Manager;
 import ac.echo.profile.Profile;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -21,14 +16,10 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ac.echo.commands.impl.EchoCommand;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,13 +28,11 @@ public class Echo extends JavaPlugin {
     private Set<BaseCommand> commands;
     private CommandMap commandMap;
     @Getter private Manager profileManager;
-    @Getter @Setter Boolean enterprise;
-    @Getter @Setter String username;
-    @Getter String apikey;
+    @Getter @Setter Boolean serverScanning = false;
 
     @Getter Storage storage;
 
-    private File configFile;
+    File configFile;
     @Getter private YamlConfiguration config;
 
     @Override
@@ -60,23 +49,6 @@ public class Echo extends JavaPlugin {
         configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) saveResource("config.yml", false);
         config = YamlConfiguration.loadConfiguration(configFile);
-
-        if (getConfig().getString("SERVER_API_KEY") == null) {
-            getLogger().severe("Server API Key not found! Please enter a server API key in the config.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        } else {
-            API api = new API();
-            String key = getConfig().getString("SERVER_API_KEY");
-
-            if (!api.isValidKey(key)) {
-                getLogger().severe("Disabling Echo Plugin due to invalid server API key.");
-                getServer().getPluginManager().disablePlugin(this);
-                return;
-            } else {
-                apikey = key;
-            }
-        }
 
         try {
             Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
@@ -95,18 +67,16 @@ public class Echo extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new MoveEvent(), this);
         }
 
-        registerCommand(new KeyCommand(this));
-
         if (getConfig().getBoolean("ALTS_COMMAND.ENABLED")) {
             registerCommand(new AltsCommand(this));
         }
 
-        if (getConfig().getBoolean("FREEZE_COMMAND.ENABLED") && enterprise) {
+        if (getConfig().getBoolean("FREEZE_COMMAND.ENABLED")) {
             registerCommand(new FreezeCommand(this));
         }
 
-        if (getConfig().getBoolean("ECHO_COMMAND.ENABLED")) {
-            registerCommand(new EchoCommand(this));
+        if (getConfig().getBoolean("KEY_COMMAND.ENABLED")) {
+            registerCommand(new KeyCommand(this));
         }
     }
 

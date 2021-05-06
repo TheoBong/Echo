@@ -1,9 +1,6 @@
 #Echo configuration file.
 #You must put your Echo API key.
 #If you don't have an enterprise plan, freeze command will not work.
-
-SERVER_API_KEY: "" #This is the API key that console uses. Only 1 concurrent scan can be run at a time on this API key.
-
 NO_PERMISSION: "&cNo permission"
 
 ALTS_COMMAND:
@@ -18,10 +15,11 @@ FREEZE_COMMAND:
   SEND_MESSAGE_EVERY: 5000 #integer in milliseconds to send the freeze message (default: every 5 seconds)
   STAFF_STARTED_MESSAGE: "&a&lStarted! &a{player} has downloaded and ran echo, now scanning!"
   STAFF_RESULT_MESSAGE: "&a&lScan complete! &aResults: {link}" #Placeholders: {link}
+  STAFF_ACTION_BAR: "&a&lScan Progress: &f&n{progress}%" #Placeholders: {progress}
   AUTOBAN:
     ENABLED: true
     TIME_BEFORE_AUTOBAN: 300000 #integer in milliseconds before automatic ban (default: 5 minutes)
     AUTOBAN_COMMAND: "/ban {player} Refusal to SS" #Placeholders: {player}
     AUTOBAN_COMMAND_CONSOLE: false #True = will send command thru console | False = will send command thru whoever the dispatched command.
-ECHO_COMMAND:
+KEY_COMMAND:
   ENABLED: true

@@ -38,20 +38,6 @@ public class FreezeCommand extends BaseCommand {
             return;
         }
 
-        if (sender instanceof Player) {
-            Player staff = (Player) sender;
-            if (echo.getStorage().getKey(staff.getUniqueId().toString()) == null) {
-                staff.sendMessage(ChatColor.RED + "Please specify your API key using /key <api-key>");
-                return;
-            }
-
-            Profile profile = echo.getProfileManager().getProfile(staff.getUniqueId());
-            if (profile.isScanning()) {
-                staff.sendMessage(ChatColor.RED + "You may only freeze 1 person at a time.");
-                return;
-            }
-        }
-
         if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "Usage: /freeze <player> [pin]");
             return;
@@ -78,8 +64,42 @@ public class FreezeCommand extends BaseCommand {
         Profile profile = echo.getProfileManager().getProfile(target.getUniqueId());
 
         if (!profile.isFrozen()) {
+
+            if (sender instanceof Player) {
+                Player staff = (Player) sender;
+                if (echo.getStorage().getKey(staff.getUniqueId().toString()) == null) {
+                    staff.sendMessage(ChatColor.RED + "Please specify your API key using /key <api-key>");
+                    return;
+                }
+
+                Profile staffProfile = echo.getProfileManager().getProfile(staff.getUniqueId());
+                if (staffProfile.isScanning()) {
+                    staff.sendMessage(ChatColor.RED + "You may only freeze 1 person at a time.");
+                    return;
+                }
+            } else {
+                if (echo.getStorage().getConsole() == null) {
+                    sender.sendMessage(ChatColor.RED + "Please specify console API key using /key <api-key>");
+                    return;
+                }
+
+                if (echo.getServerScanning()) {
+                    sender.sendMessage(ChatColor.RED + "Console is already scanning someone!");
+                    return;
+                }
+            }
+
             profile.setFrozen(true);
             sender.sendMessage(ChatColor.GREEN + "Successfully froze " + target.getName());
+
+            if (sender instanceof Player) {
+                Player senderPlayer = (Player) sender;
+                Profile senderProfile = echo.getProfileManager().getProfile(senderPlayer.getUniqueId());
+
+                senderProfile.setScanning(true);
+            } else {
+                echo.setServerScanning(true);
+            }
 
             wasFlying = target.isFlying();
             walkSpeed = target.getWalkSpeed();
@@ -102,7 +122,7 @@ public class FreezeCommand extends BaseCommand {
                     String link = "https://dl.echo.ac/" + style + "-" + encodedString;
                     getPin(link, pin, sender, target);
                 } else {
-                    String style = api.styleCode(echo.getApikey());
+                    String style = api.styleCode(echo.getStorage().getConsole());
                     String encodedString = Base64.getEncoder().encodeToString(pin.getBytes());
 
                     String link = "https://dl.echo.ac/" + style + "-" + encodedString;
@@ -112,6 +132,15 @@ public class FreezeCommand extends BaseCommand {
                 getPin(null, null, sender, target);
             }
         } else {
+            if (sender instanceof Player) {
+                Player staffPlayer = (Player) sender;
+                Profile staffProfile = echo.getProfileManager().getProfile(staffPlayer.getUniqueId());
+
+                staffProfile.setScanning(false);
+            } else {
+                echo.setServerScanning(false);
+            }
+
             profile.setFrozen(false);
             profile.setStarted(false);
             sender.sendMessage(ChatColor.GREEN + "Successfully unfroze " + target.getName());
@@ -130,8 +159,8 @@ public class FreezeCommand extends BaseCommand {
 
         if (link == null) {
             if (sender instanceof ConsoleCommandSender) {
-                pin = api.getPin(echo.getApikey(), sender);
-                link = api.getLink(echo.getApikey(), sender);
+                pin = api.getPin(echo.getStorage().getConsole(), sender);
+                link = api.getLink(echo.getStorage().getConsole(), sender);
             } else {
                 Player staff = (Player) sender;
 

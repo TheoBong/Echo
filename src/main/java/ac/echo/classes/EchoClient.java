@@ -7,7 +7,11 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import net.md_5.bungee.api.ChatColor;
+import net.minecraft.server.v1_8_R3.ChatComponentText;
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -29,8 +33,6 @@ public class EchoClient {
                         }
 
                         if (message.startsWith("NEW_PROGRESS$")) {
-                            System.out.println(message);
-
                             Profile profile = Echo.INSTANCE.getProfileManager().getProfile(target.getUniqueId());
                             if (!profile.isFrozen()) {
                                 websocket.sendClose();
@@ -47,16 +49,26 @@ public class EchoClient {
 
 
 
-                            } else if (progress.contains("FINISHED")) {
+                            } else if (progress.equals("FINISHED")) {
                                 API api = new API();
 
-                                String link = "https://scan.echo.ac/" + api.getLastScan(Echo.INSTANCE.getApikey(), staff);
+                                String link;
+
+                                if (staff instanceof Player) {
+                                    Player staffPlayer = (Player) staff;
+                                    link = "https://scan.echo.ac/" + api.getLastScan(Echo.INSTANCE.getStorage().getKey(staffPlayer.getUniqueId().toString()), staff);
+                                } else {
+                                    link = "https://scan.echo.ac/" + api.getLastScan(Echo.INSTANCE.getStorage().getConsole(), staff);
+                                }
 
                                 staff.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                         Echo.INSTANCE.getConfig().getString("FREEZE_COMMAND.STAFF_RESULT_MESSAGE")
                                                 .replace("{link}", link)));
                             } else {
-                                staff.sendMessage("Progress: " + progress + "%");
+                                PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(
+                                        (ChatColor.translateAlternateColorCodes('&', Echo.INSTANCE.getConfig().getString("FREEZE_COMMAND.STAFF_ACTION_BAR")
+                                                        .replace("{progress}", progress)))), (byte)100);
+                                ((CraftPlayer) staff).getHandle().playerConnection.sendPacket(packet);
                             }
                         }
                     }

@@ -18,35 +18,41 @@ public class KeyCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-
-            if (!sender.hasPermission("echo.staff")) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        echo.getConfig().getString("NO_PERMISSION")));
-                return;
-            }
-
-            if (args.length != 1) {
-                sender.sendMessage(ChatColor.RED + "Usage: /key <api-key>");
-                return;
-            }
-
-            updateKey(player, args[0]);
-        } else {
-            sender.sendMessage(ChatColor.RED + "Only players can use this command.");
+        if (!sender.hasPermission("echo.staff")) {
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    echo.getConfig().getString("NO_PERMISSION")));
+            return;
         }
+
+        if (args.length != 1) {
+            sender.sendMessage(ChatColor.RED + "Usage: /key <api-key>");
+            return;
+        }
+
+        updateKey(sender, args[0]);
+
     }
 
-    private void updateKey(Player p, String key){
+    private void updateKey(CommandSender sender, String key){
         new Thread(() -> {
             API api = new API();
 
-            if (api.isValidKey(key)){
-                echo.getStorage().addUser(p.getUniqueId().toString(), key);
-                p.sendMessage(ChatColor.GREEN + "Success!");
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
+
+                if (api.isValidKey(key)){
+                    echo.getStorage().addUser(p.getUniqueId().toString(), key);
+                    p.sendMessage(ChatColor.GREEN + "Success!");
+                } else {
+                    p.sendMessage(ChatColor.RED + "Invalid Key!");
+                }
             } else {
-                p.sendMessage(ChatColor.RED + "Invalid Key!");
+                if (api.isValidKey(key)){
+                    echo.getStorage().addConsole(key);
+                    sender.sendMessage(ChatColor.GREEN + "Success!");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Invalid Key!");
+                }
             }
         }).start();
     }

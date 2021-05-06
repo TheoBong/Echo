@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class AltsCommand extends BaseCommand {
 
@@ -41,7 +42,14 @@ public class AltsCommand extends BaseCommand {
 
             API api = new API();
 
-            String final_alt_list = String.join(", ", api.getAlts(echo.getApikey(), p, sender));
+            String final_alt_list;
+
+            if (sender instanceof Player) {
+                Player staffPlayer = (Player) sender;
+                final_alt_list = String.join(", ", api.getAlts(echo.getStorage().getKey(staffPlayer.getUniqueId().toString()), p, sender));
+            } else {
+                final_alt_list = String.join(", ", api.getAlts(echo.getStorage().getConsole(), p, sender));
+            }
 
             if (!final_alt_list.contains(", ")) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
