@@ -135,12 +135,11 @@ public class API {
             Object response = parser.parse(meResponse);
 
             JSONObject json_response = (JSONObject)response;
+            System.out.println(json_response);
 
             if ((Boolean)json_response.get("success")){
-                JSONArray array = (JSONArray) ((JSONObject)json_response.get("result")).get("scans");
-                String uuid = String.join("", array);
-                System.out.println(uuid);
-                return uuid;
+                String scan = (String) ((JSONObject)json_response.get("result")).get("scans");
+                return scan;
             } else {
                 sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + (String)json_response.get("message") + ".");
                 return null;

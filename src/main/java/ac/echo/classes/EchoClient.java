@@ -38,21 +38,23 @@ public class EchoClient {
 
                             String progress = message.split("\\$")[1];
 
-                            if (progress.equals("FINISHED")) {
-                                API api = new API();
-                                String link = "https://scan.echo.ac/" + api.getLastScan(Echo.INSTANCE.getApikey(), staff);
-
-                                staff.sendMessage("test");
-                                staff.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                        Echo.INSTANCE.getConfig().getString("FREEZE_COMMAND.STAFF_RESULT_MESSAGE")
-                                                .replace("{link}", link)));
-                            } else if (progress.equals("STARTED")) {
+                            if (progress.equals("STARTED")) {
                                 profile.setStarted(true);
 
-                                staff.sendMessage("test");
                                 staff.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                         Echo.INSTANCE.getConfig().getString("FREEZE_COMMAND.STAFF_STARTED_MESSAGE")
                                                 .replace("{player}", target.getName())));
+
+
+
+                            } else if (progress.contains("FINISHED")) {
+                                API api = new API();
+
+                                String link = "https://scan.echo.ac/" + api.getLastScan(Echo.INSTANCE.getApikey(), staff);
+
+                                staff.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        Echo.INSTANCE.getConfig().getString("FREEZE_COMMAND.STAFF_RESULT_MESSAGE")
+                                                .replace("{link}", link)));
                             } else {
                                 staff.sendMessage("Progress: " + progress + "%");
                             }
