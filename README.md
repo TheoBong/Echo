@@ -2,6 +2,7 @@
 Echo is a screenshare tool for catching cheaters in minecraft. This plugin allows you to more efficently run scans through echo directly through the server.
 
 To download the plugin, visit: https://github.com/Cowings/Echo/releases
+You must have an API Key to use this. Get an Echo API Key by purchasing an Echo License here: https://echo.ac/#pricing
 
 Features:
 * **Staff API Keys** - each staff member must use their own API key, this data is stored in a json file.
@@ -9,6 +10,11 @@ Features:
 * **Freezing** - completely freezes a player and runs a variety of tasks that any regular freeze plugin would have.
 * **Configurable** - almost every message and aspect of the plugin is configurable via a config.yml
 * **Free** - available for download and usage at no cost, and permissively licensed so it can remain free forever.
+
+## Frequently Asked Questions
+* **Why do I have to specify a pin in freeze command?** - this is because you have a personal license, enterprise users can auto-generate a pin.
+* **Where do I get my API key?** - go to https://dash.echo.ac/ and click "Get your API key"
+* **I found a bug, what do I do?** - open a new issue at https://github.com/Cowings/Echo/issues
 
 ## Building
 Echo Plugin uses Maven to handle dependencies & building.
