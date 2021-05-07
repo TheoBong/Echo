@@ -5,11 +5,17 @@ NO_PERMISSION: "&cNo permission"
 
 ALTS_COMMAND:
   ENABLED: true
+  ALIASES:
+    - "aliases"
+    - "alias"
   NOT_ALTS_MESSAGE: "&cCouldn't find any alts"
   START_MESSAGE: "Searching Echo for aliases of {player}..." #Placeholders: {player}
   FINISH_MESSAGE: "{alts}" #Placeholders: {alts}
 FREEZE_COMMAND:
   ENABLED: true
+  ALIASES:
+    - "ss"
+    - "screenshare"
   PLAYER_MOVE_EVENT: true #Disable this if you have players getting disconnected/anti-crash kicking them while frozen
   MESSAGE: "&c&lYou are frozen!&c You have {countdown} seconds to run this: {link}" #Placeholders: {player}, {countdown}
   SEND_MESSAGE_EVERY: 5000 #integer in milliseconds to send the freeze message (default: every 5 seconds)

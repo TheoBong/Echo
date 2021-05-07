@@ -28,6 +28,7 @@ public class FreezeCommand extends BaseCommand {
     public FreezeCommand(Echo echo) {
         super("freeze");
         this.echo = echo;
+        setAliases(echo.getConfig().getStringList("FREEZE_COMMAND.ALIASES"));
     }
 
     @Override
