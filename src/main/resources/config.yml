@@ -1,6 +1,5 @@
 #Echo configuration file.
-#You must put your Echo API key.
-#If you don't have an enterprise plan, freeze command will not work.
+#Made with love by Cow
 NO_PERMISSION: "&cNo permission"
 
 ALTS_COMMAND:
