@@ -63,6 +63,8 @@ public class Echo extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LoginEvent(), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(), this);
 
+        registerCommand(new EchoCommand(this));
+
         if (getConfig().getBoolean("FREEZE_COMMAND.PLAYER_MOVE_EVENT")) {
             getServer().getPluginManager().registerEvents(new MoveEvent(), this);
         }

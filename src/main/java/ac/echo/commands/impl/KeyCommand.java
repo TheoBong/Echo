@@ -41,6 +41,12 @@ public class KeyCommand extends BaseCommand {
                 Player p = (Player) sender;
 
                 if (api.isValidKey(key)){
+
+                    if (echo.getConfig().getBoolean("FREEZE_COMMAND.ALLOW_MULTIPLE_STAFF_PER_KEY") && echo.getStorage().keyUsed(key)) {
+                        sender.sendMessage(ChatColor.RED + "Another staff member or console is already using this key!");
+                        return;
+                    }
+
                     echo.getStorage().addUser(p.getUniqueId().toString(), key);
                     p.sendMessage(ChatColor.GREEN + "Success!");
                 } else {

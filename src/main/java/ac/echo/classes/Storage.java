@@ -106,6 +106,10 @@ public class Storage {
         }).start();
     }
 
+    public Boolean keyUsed(String key){
+        return users.containsKey(key);
+    }
+
     public String getKey(String uuid){
         if(!users.containsKey(uuid)){
             return null;

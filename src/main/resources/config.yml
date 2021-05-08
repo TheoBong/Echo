@@ -16,6 +16,10 @@ FREEZE_COMMAND:
   ALIASES:
     - "ss"
     - "screenshare"
+
+  ALLOW_MULTIPLE_STAFF_PER_KEY: false
+  #This makes it so 2 staff members cannot set their key to the same. Shit will break if 2 staff members scan with the same API key at the same time.
+
   PLAYER_MOVE_EVENT: true #Disable this if you have players getting disconnected/anti-crash kicking them while frozen
   MESSAGE: "&c&lYou are frozen!&c You have {countdown} seconds to run this: {link}" #Placeholders: {player}, {countdown}
   SEND_MESSAGE_EVERY: 5000 #integer in milliseconds to send the freeze message (default: every 5 seconds)
