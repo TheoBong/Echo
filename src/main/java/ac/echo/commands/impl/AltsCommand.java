@@ -3,6 +3,7 @@ package ac.echo.commands.impl;
 import ac.echo.Echo;
 import ac.echo.classes.API;
 import ac.echo.commands.BaseCommand;
+import ac.echo.profile.Profile;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,6 +31,31 @@ public class AltsCommand extends BaseCommand {
         if (args.length != 1) {
             sender.sendMessage(ChatColor.RED + "Usage: /alts <player>");
             return;
+        }
+
+        if (sender instanceof Player) {
+            Player staff = (Player) sender;
+            if (echo.getStorage().getKey(staff.getUniqueId().toString()) == null) {
+                staff.sendMessage(ChatColor.RED + "Please specify your API key using /key <api-key>");
+                return;
+            }
+
+            API api = new API();
+            if (!api.isValidKey(echo.getStorage().getKey(staff.getUniqueId().toString()))) {
+                staff.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
+                return;
+            }
+        } else {
+            if (echo.getStorage().getConsole() == null) {
+                sender.sendMessage(ChatColor.RED + "Please specify console API key using /key <api-key>");
+                return;
+            }
+
+            API api = new API();
+            if (!api.isValidKey(echo.getStorage().getConsole())) {
+                sender.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
+                return;
+            }
         }
 
         getAlts(args[0], sender);

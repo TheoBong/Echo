@@ -73,6 +73,12 @@ public class FreezeCommand extends BaseCommand {
                     return;
                 }
 
+                API api = new API();
+                if (!api.isValidKey(echo.getStorage().getKey(staff.getUniqueId().toString()))) {
+                    staff.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
+                    return;
+                }
+
                 Profile staffProfile = echo.getProfileManager().getProfile(staff.getUniqueId());
                 if (staffProfile.isScanning()) {
                     staff.sendMessage(ChatColor.RED + "You may only freeze 1 person at a time.");
@@ -81,6 +87,12 @@ public class FreezeCommand extends BaseCommand {
             } else {
                 if (echo.getStorage().getConsole() == null) {
                     sender.sendMessage(ChatColor.RED + "Please specify console API key using /key <api-key>");
+                    return;
+                }
+
+                API api = new API();
+                if (!api.isValidKey(echo.getStorage().getConsole())) {
+                    sender.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
                     return;
                 }
 

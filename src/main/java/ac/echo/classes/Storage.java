@@ -107,7 +107,7 @@ public class Storage {
     }
 
     public Boolean keyUsed(String key){
-        return users.containsKey(key);
+        return users.containsValue(key);
     }
 
     public String getKey(String uuid){

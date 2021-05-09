@@ -42,7 +42,7 @@ public class KeyCommand extends BaseCommand {
 
                 if (api.isValidKey(key)){
 
-                    if (echo.getConfig().getBoolean("FREEZE_COMMAND.ALLOW_MULTIPLE_STAFF_PER_KEY") && echo.getStorage().keyUsed(key)) {
+                    if (!echo.getConfig().getBoolean("FREEZE_COMMAND.ALLOW_MULTIPLE_STAFF_PER_KEY") && echo.getStorage().keyUsed(key)) {
                         sender.sendMessage(ChatColor.RED + "This API key is already in use and cannot be used twice!");
                         return;
                     }
