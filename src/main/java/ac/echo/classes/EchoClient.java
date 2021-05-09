@@ -67,7 +67,7 @@ public class EchoClient {
                             } else {
                                 PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(
                                         (ChatColor.translateAlternateColorCodes('&', Echo.INSTANCE.getConfig().getString("FREEZE_COMMAND.STAFF_ACTION_BAR")
-                                                        .replace("{progress}", progress)))), (byte)100);
+                                                        .replace("{progress}", progress)))), (byte)2);
                                 ((CraftPlayer) staff).getHandle().playerConnection.sendPacket(packet);
                             }
                         }
