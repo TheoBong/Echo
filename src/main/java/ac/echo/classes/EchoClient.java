@@ -73,11 +73,11 @@ public class EchoClient {
                                     + ChatColor.translateAlternateColorCodes('&',
                                             Echo.INSTANCE.getConfig()
                                                     .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_2"))
-                                    + "|".repeat(progress_value)
+                                    + new String(new char[progress_value]).replace("\0", "|")
                                     + ChatColor.translateAlternateColorCodes('&',
                                             Echo.INSTANCE.getConfig()
                                                     .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_3"))
-                                    + "|".repeat(progress_value_remaining)
+                                    + new String(new char[progress_value_remaining]).replace("\0", "|")
                                     + ChatColor.translateAlternateColorCodes('&',
                                             Echo.INSTANCE.getConfig()
                                                     .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_1"))
