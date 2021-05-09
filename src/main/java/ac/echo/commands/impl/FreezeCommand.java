@@ -5,6 +5,7 @@ import ac.echo.classes.API;
 import ac.echo.classes.EchoClient;
 import ac.echo.commands.BaseCommand;
 import ac.echo.profile.Profile;
+import ac.echo.utils.TimeUtil;
 import com.neovisionaries.ws.client.WebSocketException;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -15,7 +16,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class FreezeCommand extends BaseCommand {
 
@@ -210,11 +215,13 @@ public class FreezeCommand extends BaseCommand {
         }
 
         long expiry = System.currentTimeMillis() + echo.getConfig().getInt("FREEZE_COMMAND.AUTOBAN.TIME_BEFORE_AUTOBAN");
+        long expiryTimeStart = expiry - System.currentTimeMillis();
 
         if (echo.getConfig().getBoolean("FREEZE_COMMAND.AUTOBAN.ENABLED")) {
             target.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
-                            .replace("{link}", link).replace("{countdown}", "" + (expiry - System.currentTimeMillis())/1000)));
+                            .replace("{link}", link)
+                            .replace("{countdown}", TimeUtil.formatTimeMillis(expiryTimeStart))));
         } else {
             target.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
@@ -244,10 +251,13 @@ public class FreezeCommand extends BaseCommand {
                     }
                 }
 
+                long expiryTime = expiry - System.currentTimeMillis();
+
                 if (echo.getConfig().getBoolean("FREEZE_COMMAND.AUTOBAN.ENABLED")) {
                     target.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
-                                    .replace("{link}", finalLink).replace("{countdown}", "" + (expiry - System.currentTimeMillis())/1000)));
+                                    .replace("{link}", finalLink)
+                                    .replace("{countdown}", TimeUtil.formatTimeMillis(expiryTime))));
                 } else {
                     target.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             echo.getConfig().getString("FREEZE_COMMAND.MESSAGE")
