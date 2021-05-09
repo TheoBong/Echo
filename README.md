@@ -39,5 +39,10 @@ Echo Plugin loosely follows the [Google Java Style Guide](https://google.github.
 
 Please make sure to have bug fixes/improvements in seperate pull requests from new features/changing how features work.
 
+#### TODO
+More spigot jar support
+More testing
+Make all API Requests Async
+
 ## License
 Echo Plugin is licensed under the permissive MIT license. Please see [`LICENSE.txt`](https://github.com/Cowings/Echo/blob/master/LICENSE.txt) for more info.
