@@ -60,9 +60,6 @@ public class Storage {
                 fileWriter.close();
             }
         } catch (IOException e) {
-
-            Bukkit.getLogger().warning("Error occured while handling config file.");
-            e.printStackTrace();
         }
 
         File newFile = new File(folder, location);
@@ -84,8 +81,6 @@ public class Storage {
             }
 
         } catch (FileNotFoundException e) {
-            Bukkit.getLogger().warning(e.getMessage());
-            e.printStackTrace();
         }
 
 
