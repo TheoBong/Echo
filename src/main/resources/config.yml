@@ -24,7 +24,11 @@ FREEZE_COMMAND:
   SEND_MESSAGE_EVERY: 1000 #integer in milliseconds to send the freeze message (default: 1 second)
   STAFF_STARTED_MESSAGE: "&f&lStarted! &b{player} &fhas downloaded and ran Echo, now scanning!"
   STAFF_RESULT_MESSAGE: "&f&lScan complete! &fResults: &b{link}"
-  STAFF_ACTION_BAR: "&f&lScan Progress: &f&n{progress}%"
+  STAFF_ACTION_BAR: "&f&lScan Progress: &f&n{progress}"
+  STAFF_ACTION_BAR_PROGRESS_BAR: true
+  STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_1: "&7"
+  STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_2: "&b&l"
+  STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_3: "&f&l"
   AUTOBAN:
     ENABLED: true
     TIME_BEFORE_AUTOBAN: 300000 #integer in milliseconds before automatic ban (default: 5 minutes)

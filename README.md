@@ -22,6 +22,7 @@ Echo Plugin uses Maven to handle dependencies & building.
 #### Requirements
 * Java 8 JDK or newer
 * Git
+* Spigot Build Tools installed (we're using 1.8.8)
 
 #### Compiling from source
 ```sh

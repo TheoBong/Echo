@@ -32,3 +32,12 @@ hs_err_pid*
 
 *.prefs
 .project
+bin/src/main/resources/plugin.yml
+bin/src/main/resources/config.yml
+bin/README.md
+bin/pom.xml
+bin/LICENSE.txt
+bin/.gitattributes
+bin/.classpath
+.factorypath
+.classpath
