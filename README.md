@@ -13,7 +13,7 @@ Features:
 
 ## Frequently Asked Questions
 * **Why do I have to specify a pin in freeze command?** - this is because you have a personal license, enterprise users can auto-generate a pin.
-* **Where do I get my API key?** - go to https://dash.echo.ac/ and click "Get your API key"
+* **Where do I get my API key?** - https://github.com/Cowings/Echo/wiki#setup-process-each-moderator-must-do-this
 * **I found a bug, what do I do?** - open a new issue at https://github.com/Cowings/Echo/issues
 
 ## Building
@@ -40,6 +40,3 @@ Please make sure to have bug fixes/improvements in seperate pull requests from n
 
 ## License
 Echo Plugin is licensed under the permissive MIT license. Please see [`LICENSE.txt`](https://github.com/Cowings/Echo/blob/master/LICENSE.txt) for more info.
-
-## Other
-Credits to Luckperm for the layout of this readme file.
