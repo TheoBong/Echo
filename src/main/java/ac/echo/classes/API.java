@@ -208,6 +208,36 @@ public class API {
         }
     }
 
+    public String plan(String key) {
+        String meResponse = getRequest("https://api.echo.ac/query/me?key=" + key);
+
+        if(meResponse.equals("")) {
+            System.out.println("Couldn't reach Echo servers (API DOWN?).");
+            return "";
+        }
+
+        try {
+            JSONParser parser = new JSONParser();
+            Object response = parser.parse(meResponse);
+
+            JSONObject json_response = (JSONObject) response;
+
+            if ((Boolean)json_response.get("success")) {
+                JSONObject object = (JSONObject) ((JSONObject) json_response.get("result")).get("plan");
+                String planName = (String) object.get("name");
+                return planName;
+            } else {
+                System.out.println("Error from Echo servers: " + (String) json_response.get("message"));
+                return "";
+            }
+
+        } catch (ParseException e) {
+            Bukkit.getLogger().warning(e.getMessage());
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     public Boolean isValidKey(String key) {
         String meResponse = getRequest("https://api.echo.ac/query/me?key=" + key);
 

@@ -51,10 +51,25 @@ public class FreezeCommand extends BaseCommand {
 
         Player target = Bukkit.getPlayer(args[0]);
 
-        String pin = null;
+        int pin = 0;
 
         if (args.length == 2) {
-            pin = args[1];
+            try {
+                pin = Integer.parseInt(args[1]);
+            } catch (NumberFormatException exception) {
+                sender.sendMessage(ChatColor.RED + "Invalid number (must be a positive integer)!");
+                return;
+            }
+
+            if (String.valueOf(pin).startsWith("-")) {
+                sender.sendMessage(ChatColor.RED + "Invalid Pin (must be a positive integer)");
+                return;
+            }
+
+            if (String.valueOf(pin).length() != 6) {
+                sender.sendMessage(ChatColor.RED + "Invalid Pin (must be 6 digit integer)");
+                return;
+            }
         }
 
         if (target == null) {
@@ -79,6 +94,11 @@ public class FreezeCommand extends BaseCommand {
                     return;
                 }
 
+                if (!api.plan(echo.getStorage().getKey(staff.getUniqueId().toString())).equals("Enterprise") && args.length < 2) {
+                    sender.sendMessage(ChatColor.RED + "Since you have a personal license, you must specify an extra argument pin.");
+                    return;
+                }
+
                 Profile staffProfile = echo.getProfileManager().getProfile(staff.getUniqueId());
                 if (staffProfile.isScanning()) {
                     staff.sendMessage(ChatColor.RED + "You may only freeze 1 person at a time.");
@@ -93,6 +113,11 @@ public class FreezeCommand extends BaseCommand {
                 API api = new API();
                 if (!api.isValidKey(echo.getStorage().getConsole())) {
                     sender.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
+                    return;
+                }
+
+                if (!api.plan(echo.getStorage().getConsole()).equals("Enterprise") && args.length < 2) {
+                    sender.sendMessage(ChatColor.RED + "Since you have a personal license, you must specify an extra argument pin.");
                     return;
                 }
 
@@ -124,22 +149,24 @@ public class FreezeCommand extends BaseCommand {
             target.setSprinting(false);
             target.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
 
-            if (pin != null) {
+            if (pin != 0) {
+                String pinString = String.valueOf(pin);
+
                 API api = new API();
                 if (sender instanceof Player) {
                     Player staff = (Player) sender;
                     String style = api.styleCode(echo.getStorage().getKey(staff.getUniqueId().toString()));
 
-                    String encodedString = Base64.getEncoder().encodeToString(pin.getBytes());
+                    String encodedString = Base64.getEncoder().encodeToString(pinString.getBytes());
 
                     String link = "https://dl.echo.ac/" + style + "-" + encodedString;
-                    getPin(link, pin, sender, target);
+                    getPin(link, pinString, sender, target);
                 } else {
                     String style = api.styleCode(echo.getStorage().getConsole());
-                    String encodedString = Base64.getEncoder().encodeToString(pin.getBytes());
+                    String encodedString = Base64.getEncoder().encodeToString(pinString.getBytes());
 
                     String link = "https://dl.echo.ac/" + style + "-" + encodedString;
-                    getPin(link, pin, sender, target);
+                    getPin(link, pinString, sender, target);
                 }
             } else {
                 getPin(null, null, sender, target);
