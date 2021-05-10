@@ -61,6 +61,7 @@ public class EchoClient {
 
                         staff.sendMessage(ChatColor.translateAlternateColorCodes('&', Echo.INSTANCE.getConfig()
                                 .getString("FREEZE_COMMAND.STAFF_RESULT_MESSAGE").replace("{link}", link)));
+                        websocket.disconnect();
                     } else {
                         try {
                             int progress_value = Integer.parseInt(progress) / 5;

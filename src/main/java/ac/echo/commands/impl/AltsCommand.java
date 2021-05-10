@@ -15,7 +15,7 @@ public class AltsCommand extends BaseCommand {
     private Echo echo;
 
     public AltsCommand(Echo echo) {
-        super("alts");
+        super(echo.getConfig().getString("ALTS_COMMAND.MAIN_COMMAND"));
         this.echo = echo;
         setAliases(echo.getConfig().getStringList("ALTS_COMMAND.ALIASES"));
     }

@@ -31,7 +31,7 @@ public class FreezeCommand extends BaseCommand {
     private int foodLevel = 20;
 
     public FreezeCommand(Echo echo) {
-        super("freeze");
+        super(echo.getConfig().getString("FREEZE_COMMAND.MAIN_COMMAND"));
         this.echo = echo;
         setAliases(echo.getConfig().getStringList("FREEZE_COMMAND.ALIASES"));
     }

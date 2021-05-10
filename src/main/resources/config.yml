@@ -4,6 +4,7 @@ NO_PERMISSION: "&cNo permission"
 
 ALTS_COMMAND:
   ENABLED: true
+  MAIN_COMMAND: "alts"
   ALIASES:
     - "aliases"
     - "alias"
@@ -12,6 +13,7 @@ ALTS_COMMAND:
   FINISH_MESSAGE: "{alts}"
 FREEZE_COMMAND:
   ENABLED: true
+  MAIN_COMMAND: "freeze"
   ALIASES:
     - "ss"
     - "screenshare"
