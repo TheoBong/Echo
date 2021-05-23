@@ -2,6 +2,7 @@ package ac.echo.listeners;
 
 import ac.echo.Echo;
 import ac.echo.profile.Profile;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,13 +43,15 @@ public class FreezeListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player p = (Player) event.getEntity();
+        if (event.getDamager() instanceof Player) {
+            Player p = (Player) event.getDamager();
             Profile profile = Echo.INSTANCE.getProfileManager().getProfile(p.getUniqueId());
             if (profile.isFrozen()) {
                 event.setCancelled(true);
             }
         }
+
+
     }
 
     @EventHandler
