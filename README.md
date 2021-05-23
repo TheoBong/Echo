@@ -15,7 +15,7 @@ Features:
 * **Why do I have to specify a pin in freeze command?** - this is because you have a personal license, enterprise users can auto-generate a pin.
 * **Where do I get my API key?** - https://github.com/Cowings/Echo/wiki#setup-process-each-moderator-must-do-this
 * **I found a bug, what do I do?** - open a new issue at https://github.com/Cowings/Echo/issues
-* **Where can I find Echo's REST API documentation?** - https://docs.echo.ac/
+* **Where can I find Echo's REST API documentation?** - https://dash.echo.ac/docs
 
 
 ## Building
