@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Store</name>
-    <groupId>lol.icantbreathe</groupId>
-    <artifactId>Store</artifactId>
+    <name>Echo</name>
+    <groupId>ac.echo</groupId>
+    <artifactId>Echo</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -23,33 +23,25 @@
     </repositories>
 
     <dependencies>
-
         <!-- Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <artifactId>spigot</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <!-- Paypal API -->
-        <dependency>
-            <groupId>com.paypal.sdk</groupId>
-            <artifactId>checkout-sdk</artifactId>
-            <version>1.0.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Derkutils -->
-        <dependency>
-            <groupId>xyz.derkades</groupId>
-            <artifactId>Derkutils</artifactId>
-            <version>legacy</version>
         </dependency>
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.12</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Websocket -->
+        <dependency>
+            <groupId>com.neovisionaries</groupId>
+            <artifactId>nv-websocket-client</artifactId>
+            <version>2.14</version>
         </dependency>
     </dependencies>
 
@@ -77,9 +69,9 @@
                     <execution>
                         <phase>initialize</phase>
                         <configuration>
-                            <format>git-Store-%s</format>
+                            <format>git-Echo-%s</format>
                             <scmDirectory>${project.parent.basedir}</scmDirectory>
-                            <descriptionProperty>store.desc</descriptionProperty>
+                            <descriptionProperty>echo.desc</descriptionProperty>
                         </configuration>
                         <goals>
                             <goal>describe</goal>

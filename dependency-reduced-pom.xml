@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>lol.icantbreathe</groupId>
-  <artifactId>Store</artifactId>
-  <name>Store</name>
+  <groupId>ac.echo</groupId>
+  <artifactId>Echo</artifactId>
+  <name>Echo</name>
   <version>1.0</version>
   <build>
     <defaultGoal>clean package</defaultGoal>
@@ -30,9 +30,9 @@
               <goal>describe</goal>
             </goals>
             <configuration>
-              <format>git-Store-%s</format>
+              <format>git-Echo-%s</format>
               <scmDirectory>${project.parent.basedir}</scmDirectory>
-              <descriptionProperty>store.desc</descriptionProperty>
+              <descriptionProperty>echo.desc</descriptionProperty>
             </configuration>
           </execution>
         </executions>
@@ -60,14 +60,8 @@
   <dependencies>
     <dependency>
       <groupId>org.spigotmc</groupId>
-      <artifactId>spigot-api</artifactId>
+      <artifactId>spigot</artifactId>
       <version>1.8.8-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.12</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

@@ -1,4 +1,4 @@
-package io.github.utils;
+package ac.echo.utils;
 
 public class TimeUtil {
     public static String formatTimeMillis(final long millis) {
