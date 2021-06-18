@@ -1,8 +1,10 @@
-package ac.echo.commands;
+package io.github.commands;
 
-import ac.echo.Echo;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 public abstract class BaseCommand extends Command {
 

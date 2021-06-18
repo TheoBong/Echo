@@ -1,6 +1,6 @@
-package ac.echo.classes;
+package io.github.utils;
 
-import ac.echo.Echo;
+import io.github.Store;
 import org.bukkit.Bukkit;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,14 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Storage {
+public class TransactionHistory {
 
-    File folder = Echo.INSTANCE.getDataFolder();
-    String location = "staff.json";
-    Map<String, String> users;
+    File folder = Store.INSTANCE.getDataFolder();
+    String location = "transactions.json";
+    Map<String, JSONObject> transactions;
 
-    public Storage() {
-        users = new HashMap<String, String>();
+    public TransactionHistory() {
+        transactions = new HashMap<String, JSONObject>();
     }
 
 
@@ -32,7 +32,7 @@ public class Storage {
             file.createNewFile();
 
             JSONObject mainObject = new JSONObject();
-            mainObject.put("users", new JSONObject(users));
+            mainObject.put("transactions", new JSONObject(transactions));
 
             FileWriter fileWriter = new FileWriter(file.getCanonicalFile());
             fileWriter.write(mainObject.toJSONString());
@@ -53,7 +53,7 @@ public class Storage {
             if(file.createNewFile()){
 
                 JSONObject mainObject = new JSONObject();
-                mainObject.put("users", new JSONObject(users));
+                mainObject.put("transactions", new JSONObject(transactions));
 
                 FileWriter fileWriter = new FileWriter(file.getCanonicalFile());
                 fileWriter.write(mainObject.toJSONString());
@@ -72,7 +72,7 @@ public class Storage {
                 Object config = parser.parse(fileReader.nextLine());
                 JSONObject jConfig = (JSONObject)config;
 
-                users = ((HashMap)jConfig.get("users"));
+                transactions = ((HashMap)jConfig.get("transactions"));
 
 
             } catch (ParseException e) {
@@ -86,34 +86,25 @@ public class Storage {
 
     }
 
-    public String getConsole(){
-        if(!users.containsKey("console")){
+    public JSONObject getTransactionPlayer(String playerUUID){
+        for (JSONObject jsonObject : transactions.values()) {
+            String storedUUID = (String) jsonObject.get("playerUUID");
+            if (storedUUID.equals(playerUUID)) {
+                return jsonObject;
+            }
+        }
+        return null;
+    }
+
+    public JSONObject getTransaction(String orderId){
+        if(!transactions.containsKey(orderId)){
             return null;
         }
-        return users.get("console");
+        return transactions.get(orderId);
     }
 
-    public void addConsole(String key) {
-        users.put("console", key);
-
-        new Thread(() -> {
-            exportConfig();
-        }).start();
-    }
-
-    public Boolean keyUsed(String key){
-        return users.containsValue(key);
-    }
-
-    public String getKey(String uuid){
-        if(!users.containsKey(uuid)){
-            return null;
-        }
-        return users.get(uuid);
-    }
-
-    public void addUser(String uuid, String key) {
-        users.put(uuid, key);
+    public void addTransaction(String orderId, JSONObject transaction) {
+        transactions.put(orderId, transaction);
 
         new Thread(() -> {
             exportConfig();
