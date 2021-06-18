@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>Store</name>
-    <groupId>lol.icantbreathe</groupId>
+    <groupId>io.github</groupId>
     <artifactId>Store</artifactId>
     <version>1.0</version>
 
@@ -23,7 +23,6 @@
     </repositories>
 
     <dependencies>
-
         <!-- Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -78,7 +77,7 @@
                         <phase>initialize</phase>
                         <configuration>
                             <format>git-Store-%s</format>
-                            <scmDirectory>${project.parent.basedir}</scmDirectory>
+                            <scmDirectory>${project.basedir}</scmDirectory>
                             <descriptionProperty>store.desc</descriptionProperty>
                         </configuration>
                         <goals>
