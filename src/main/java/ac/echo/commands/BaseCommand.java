@@ -1,5 +1,6 @@
 package ac.echo.commands;
 
+import ac.echo.Echo;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
