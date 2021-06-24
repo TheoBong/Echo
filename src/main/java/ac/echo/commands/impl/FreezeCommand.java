@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class FreezeCommand extends BaseCommand {
 
@@ -38,165 +38,175 @@ public class FreezeCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("echo.pin")) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    echo.getConfig().getString("NO_PERMISSION")));
-            return;
-        }
+        doEverything(sender, args); //made everything async lmao
+    }
 
-        if (args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "Usage: /freeze <player> [pin]");
-            return;
-        }
-
-        if (args.length > 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: /freeze <player> [pin]");
-            return;
-        }
-
-        Player target = Bukkit.getPlayer(args[0]);
-
-        int pin = 0;
-
-        if (args.length == 2) {
-            try {
-                pin = Integer.parseInt(args[1]);
-            } catch (NumberFormatException exception) {
-                sender.sendMessage(ChatColor.RED + "Invalid number (must be a positive integer)!");
+    private void doEverything(CommandSender sender, String[] args) {
+        new Thread(() -> {
+            if (!sender.hasPermission("echo.pin")) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        echo.getConfig().getString("NO_PERMISSION")));
                 return;
             }
 
-            if (String.valueOf(pin).startsWith("-")) {
-                sender.sendMessage(ChatColor.RED + "Invalid Pin (must be a positive integer)");
+            if (args.length == 0) {
+                sender.sendMessage(ChatColor.RED + "Usage: /freeze <player> [pin]");
                 return;
             }
 
-            if (String.valueOf(pin).length() != 6) {
-                sender.sendMessage(ChatColor.RED + "Invalid Pin (must be 6 digit integer)");
+            if (args.length > 2) {
+                sender.sendMessage(ChatColor.RED + "Usage: /freeze <player> [pin]");
                 return;
             }
-        }
 
-        if (target == null) {
-            sender.sendMessage(ChatColor.RED + "Can't find player!");
-            return;
-        }
+            Player target = Bukkit.getPlayer(args[0]);
 
-        Profile profile = echo.getProfileManager().getProfile(target.getUniqueId());
+            int pin = 0;
 
-        if (!profile.isFrozen()) {
-
-            if (sender instanceof Player) {
-                Player staff = (Player) sender;
-                if (echo.getStorage().getKey(staff.getUniqueId().toString()) == null) {
-                    staff.sendMessage(ChatColor.RED + "Please specify your API key using /key <api-key>");
+            if (args.length == 2) {
+                try {
+                    pin = Integer.parseInt(args[1]);
+                } catch (NumberFormatException exception) {
+                    sender.sendMessage(ChatColor.RED + "Invalid number (must be a positive integer)!");
                     return;
                 }
 
-                API api = new API();
-                if (!api.isValidKey(echo.getStorage().getKey(staff.getUniqueId().toString()))) {
-                    staff.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
+                if (String.valueOf(pin).startsWith("-")) {
+                    sender.sendMessage(ChatColor.RED + "Invalid Pin (must be a positive integer)");
                     return;
                 }
 
-                if (!api.plan(echo.getStorage().getKey(staff.getUniqueId().toString())).equals("Enterprise") && args.length < 2) {
-                    sender.sendMessage(ChatColor.RED + "Since you have a personal license, you must specify an extra argument pin.");
-                    return;
-                }
-
-                Profile staffProfile = echo.getProfileManager().getProfile(staff.getUniqueId());
-                if (staffProfile.isScanning()) {
-                    staff.sendMessage(ChatColor.RED + "You may only freeze 1 person at a time.");
-                    return;
-                }
-            } else {
-                if (echo.getStorage().getConsole() == null) {
-                    sender.sendMessage(ChatColor.RED + "Please specify console API key using /key <api-key>");
-                    return;
-                }
-
-                API api = new API();
-                if (!api.isValidKey(echo.getStorage().getConsole())) {
-                    sender.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
-                    return;
-                }
-
-                if (!api.plan(echo.getStorage().getConsole()).equals("Enterprise") && args.length < 2) {
-                    sender.sendMessage(ChatColor.RED + "Since you have a personal license, you must specify an extra argument pin.");
-                    return;
-                }
-
-                if (echo.getServerScanning()) {
-                    sender.sendMessage(ChatColor.RED + "Console is already scanning someone!");
+                if (String.valueOf(pin).length() != 6) {
+                    sender.sendMessage(ChatColor.RED + "Invalid Pin (must be 6 digit integer)");
                     return;
                 }
             }
 
-            profile.setFrozen(true);
-            sender.sendMessage(ChatColor.GREEN + "Successfully froze " + target.getName());
-
-            if (sender instanceof Player) {
-                Player senderPlayer = (Player) sender;
-                Profile senderProfile = echo.getProfileManager().getProfile(senderPlayer.getUniqueId());
-
-                senderProfile.setScanning(true);
-            } else {
-                echo.setServerScanning(true);
+            if (target == null) {
+                sender.sendMessage(ChatColor.RED + "Can't find player!");
+                return;
             }
 
-            wasFlying = target.isFlying();
-            walkSpeed = target.getWalkSpeed();
-            foodLevel = target.getFoodLevel();
+            Profile profile = echo.getProfileManager().getProfile(target.getUniqueId());
 
-            target.setFlying(false);
-            target.setWalkSpeed(0.0F);
-            target.setFoodLevel(0);
-            target.setSprinting(false);
-            target.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
+            if (!profile.isFrozen()) {
 
-            if (pin != 0) {
-                String pinString = String.valueOf(pin);
-
-                API api = new API();
                 if (sender instanceof Player) {
                     Player staff = (Player) sender;
-                    String style = api.styleCode(echo.getStorage().getKey(staff.getUniqueId().toString()));
+                    if (echo.getStorage().getKey(staff.getUniqueId().toString()) == null) {
+                        staff.sendMessage(ChatColor.RED + "Please specify your API key using /key <api-key>");
+                        return;
+                    }
 
-                    String encodedString = Base64.getEncoder().encodeToString(pinString.getBytes());
+                    API api = new API();
+                    if (!api.isValidKey(echo.getStorage().getKey(staff.getUniqueId().toString()))) {
+                        staff.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
+                        return;
+                    }
 
-                    String link = "https://dl.echo.ac/" + style + "-" + encodedString;
-                    getPin(link, pinString, sender, target);
+                    if (!api.plan(echo.getStorage().getKey(staff.getUniqueId().toString())).equals("Enterprise") && args.length < 2) {
+                        sender.sendMessage(ChatColor.RED + "Since you have a personal license, you must specify an extra argument pin.");
+                        return;
+                    }
+
+                    Profile staffProfile = echo.getProfileManager().getProfile(staff.getUniqueId());
+                    if (staffProfile.isScanning()) {
+                        staff.sendMessage(ChatColor.RED + "You may only freeze 1 person at a time.");
+                        return;
+                    }
                 } else {
-                    String style = api.styleCode(echo.getStorage().getConsole());
-                    String encodedString = Base64.getEncoder().encodeToString(pinString.getBytes());
+                    if (echo.getStorage().getConsole() == null) {
+                        sender.sendMessage(ChatColor.RED + "Please specify console API key using /key <api-key>");
+                        return;
+                    }
 
-                    String link = "https://dl.echo.ac/" + style + "-" + encodedString;
-                    getPin(link, pinString, sender, target);
+                    API api = new API();
+                    if (!api.isValidKey(echo.getStorage().getConsole())) {
+                        sender.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
+                        return;
+                    }
+
+                    if (!api.plan(echo.getStorage().getConsole()).equals("Enterprise") && args.length < 2) {
+                        sender.sendMessage(ChatColor.RED + "Since you have a personal license, you must specify an extra argument pin.");
+                        return;
+                    }
+
+                    if (echo.getServerScanning()) {
+                        sender.sendMessage(ChatColor.RED + "Console is already scanning someone!");
+                        return;
+                    }
+                }
+
+                profile.setFrozen(true);
+                sender.sendMessage(ChatColor.GREEN + "Successfully froze " + target.getName());
+
+                if (sender instanceof Player) {
+                    Player senderPlayer = (Player) sender;
+                    Profile senderProfile = echo.getProfileManager().getProfile(senderPlayer.getUniqueId());
+
+                    senderProfile.setScanning(true);
+                } else {
+                    echo.setServerScanning(true);
+                }
+
+                wasFlying = target.isFlying();
+                walkSpeed = target.getWalkSpeed();
+                foodLevel = target.getFoodLevel();
+
+                target.setFlying(false);
+                target.setWalkSpeed(0.0F);
+                target.setFoodLevel(0);
+                target.setSprinting(false);
+                target.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
+
+                if (pin != 0) {
+                    String pinString = String.valueOf(pin);
+
+                    API api = new API();
+                    if (sender instanceof Player) {
+                        Player staff = (Player) sender;
+                        String[] style = {null};
+                        style[0] = api.styleCode(echo.getStorage().getKey(staff.getUniqueId().toString()));
+
+                        String encodedString = Base64.getEncoder().encodeToString(pinString.getBytes());
+
+                        String link = "https://dl.echo.ac/" + style[0] + "-" + encodedString;
+                        getPin(link, pinString, sender, target);
+                    } else {
+                        String[] style = {null};
+                        style[0] = api.styleCode(echo.getStorage().getKey(echo.getStorage().getConsole()));
+
+                        String encodedString = Base64.getEncoder().encodeToString(pinString.getBytes());
+
+                        String link = "https://dl.echo.ac/" + style[0] + "-" + encodedString;
+                        getPin(link, pinString, sender, target);
+                    }
+                } else {
+                    getPin(null, null, sender, target);
                 }
             } else {
-                getPin(null, null, sender, target);
+                if (sender instanceof Player) {
+                    Player staffPlayer = (Player) sender;
+                    Profile staffProfile = echo.getProfileManager().getProfile(staffPlayer.getUniqueId());
+
+                    staffProfile.setScanning(false);
+                } else {
+                    echo.setServerScanning(false);
+                }
+
+                profile.setFrozen(false);
+                profile.setStarted(false);
+                sender.sendMessage(ChatColor.GREEN + "Successfully unfroze " + target.getName());
+
+                target.sendMessage(ChatColor.GREEN + "You have been unfrozen.");
+                target.setFlying(wasFlying);
+                target.setWalkSpeed(walkSpeed);
+                target.setFoodLevel(foodLevel);
+                target.setSprinting(true);
+                target.removePotionEffect(PotionEffectType.JUMP);
             }
-        } else {
-            if (sender instanceof Player) {
-                Player staffPlayer = (Player) sender;
-                Profile staffProfile = echo.getProfileManager().getProfile(staffPlayer.getUniqueId());
+        }).start();
 
-                staffProfile.setScanning(false);
-            } else {
-                echo.setServerScanning(false);
-            }
-
-            profile.setFrozen(false);
-            profile.setStarted(false);
-            sender.sendMessage(ChatColor.GREEN + "Successfully unfroze " + target.getName());
-
-            target.sendMessage(ChatColor.GREEN + "You have been unfrozen.");
-            target.setFlying(wasFlying);
-            target.setWalkSpeed(walkSpeed);
-            target.setFoodLevel(foodLevel);
-            target.setSprinting(true);
-            target.removePotionEffect(PotionEffectType.JUMP);
-        }
     }
 
     private void getPin(String link, String pin, CommandSender sender, Player target){
@@ -266,12 +276,13 @@ public class FreezeCommand extends BaseCommand {
             }
         }).start();
 
-        try {
-            EchoClient.connect(pin, sender, target);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (WebSocketException e) {
-            e.printStackTrace();
-        }
+        String pinFinal = pin;
+        new Thread(() -> {
+            try {
+                EchoClient.connect(pinFinal, sender, target);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
