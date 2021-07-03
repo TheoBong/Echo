@@ -1,25 +1,18 @@
 package ac.echo.classes;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.ArrayList;
-
-import ac.echo.Echo;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import net.md_5.bungee.api.ChatColor;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 
 public class API {
 
@@ -31,35 +24,22 @@ public class API {
             url = new URL(url_string);
 
             HttpURLConnection con;
-            try {
-                con = (HttpURLConnection) url.openConnection();
+            con = (HttpURLConnection) url.openConnection();
 
-                try {
-                    con.setRequestMethod("GET");
+            con.setRequestMethod("GET");
 
-                    con.connect();
+            con.connect();
 
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer content = new StringBuffer();
-                    while ((inputLine = in.readLine()) != null) {
-                        content.append(inputLine);
-                    }
-                    in.close();
-
-                    return content.toString();
-
-                } catch (ProtocolException e) {
-                    Bukkit.getLogger().warning(e.getMessage());
-                    e.printStackTrace();
-                    return "";
-                }
-            } catch (IOException e) {
-                Bukkit.getLogger().warning(e.getMessage());
-                e.printStackTrace();
-                return "";
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
             }
-        } catch (MalformedURLException e) {
+            in.close();
+
+            return content.toString();
+        } catch (Exception e) {
             Bukkit.getLogger().warning(e.getMessage());
             e.printStackTrace();
             return "";
@@ -111,7 +91,7 @@ public class API {
             if((Boolean)json_response.get("success")){
                 return (String) ((JSONObject)json_response.get("result")).get("pin");
             } else {
-                sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + (String)json_response.get("message") + ".");
+                sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + json_response.get("message") + ".");
                 return null;
             }
 
@@ -140,7 +120,7 @@ public class API {
                 String scan = (String) ((JSONObject)json_response.get("result")).get("scans");
                 return scan;
             } else {
-                sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + (String)json_response.get("message") + ".");
+                sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + json_response.get("message") + ".");
                 return null;
             }
 
@@ -168,7 +148,7 @@ public class API {
             if((Boolean)json_response.get("success")){
                 return (String) ((JSONObject)json_response.get("result")).get("link");
             } else {
-                sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + (String)json_response.get("message") + ".");
+                sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + json_response.get("message") + ".");
                 return null;
             }
 
@@ -197,7 +177,7 @@ public class API {
                 String stylecode = (String) ((JSONObject) json_response.get("result")).get("styler_code");
                 return stylecode;
             } else {
-                System.out.println("Error from Echo servers: " + (String) json_response.get("message"));
+                System.out.println("Error from Echo servers: " + json_response.get("message"));
                 return "";
             }
 
@@ -227,7 +207,7 @@ public class API {
                 String planName = (String) object.get("name");
                 return planName;
             } else {
-                System.out.println("Error from Echo servers: " + (String) json_response.get("message"));
+                System.out.println("Error from Echo servers: " + json_response.get("message"));
                 return "";
             }
 
@@ -255,7 +235,7 @@ public class API {
             if ((Boolean)json_response.get("success")) {
                 return true;
             } else {
-                System.out.println("Error from Echo servers: " + (String) json_response.get("message"));
+                System.out.println("Error from Echo servers: " + json_response.get("message"));
                 return false;
             }
 

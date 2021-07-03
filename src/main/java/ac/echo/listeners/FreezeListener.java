@@ -2,7 +2,6 @@ package ac.echo.listeners;
 
 import ac.echo.Echo;
 import ac.echo.profile.Profile;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,10 +12,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 public class FreezeListener implements Listener {
+    private Echo echo;
+
+    public FreezeListener(Echo echo) {
+        this.echo = echo;
+    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        Profile profile = Echo.INSTANCE.getProfileManager().getProfile(event.getPlayer().getUniqueId());
+        Profile profile = echo.getProfileManager().getProfile(event.getPlayer().getUniqueId());
         if (profile.isFrozen()) {
             event.setCancelled(true);
         }
@@ -24,7 +28,7 @@ public class FreezeListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        Profile profile = Echo.INSTANCE.getProfileManager().getProfile(event.getPlayer().getUniqueId());
+        Profile profile = echo.getProfileManager().getProfile(event.getPlayer().getUniqueId());
         if (profile.isFrozen()) {
             event.setCancelled(true);
         }
@@ -34,7 +38,7 @@ public class FreezeListener implements Listener {
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player p = (Player) event.getEntity();
-            Profile profile = Echo.INSTANCE.getProfileManager().getProfile(p.getUniqueId());
+            Profile profile = echo.getProfileManager().getProfile(p.getUniqueId());
             if (profile.isFrozen()) {
                 event.setCancelled(true);
             }
@@ -45,7 +49,7 @@ public class FreezeListener implements Listener {
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player) {
             Player p = (Player) event.getDamager();
-            Profile profile = Echo.INSTANCE.getProfileManager().getProfile(p.getUniqueId());
+            Profile profile = echo.getProfileManager().getProfile(p.getUniqueId());
             if (profile.isFrozen()) {
                 event.setCancelled(true);
             }
@@ -58,7 +62,7 @@ public class FreezeListener implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (event.getEntity() instanceof Player) {
             Player p = (Player) event.getEntity();
-            Profile profile = Echo.INSTANCE.getProfileManager().getProfile(p.getUniqueId());
+            Profile profile = echo.getProfileManager().getProfile(p.getUniqueId());
             if (profile.isFrozen()) {
                 event.setCancelled(true);
             }

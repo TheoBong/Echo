@@ -6,8 +6,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 public class LoginEvent implements Listener {
+    private Echo echo;
+
+    public LoginEvent(Echo echo) {
+        this.echo = echo;
+    }
+
     @EventHandler
     public void onLogin(AsyncPlayerPreLoginEvent event) {
-        Echo.INSTANCE.getProfileManager().createProfile(event.getName(), event.getUniqueId());
+        echo.getProfileManager().createProfile(event.getName(), event.getUniqueId());
     }
 }

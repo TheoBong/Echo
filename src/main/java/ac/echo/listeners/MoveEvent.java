@@ -8,10 +8,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class MoveEvent implements Listener {
+    private Echo echo;
+
+    public MoveEvent(Echo echo) {
+        this.echo = echo;
+    }
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        Profile profile = Echo.INSTANCE.getProfileManager().getProfile(event.getPlayer().getUniqueId());
+        Profile profile = echo.getProfileManager().getProfile(event.getPlayer().getUniqueId());
 
         Location to = event.getTo();
         Location from = event.getFrom();

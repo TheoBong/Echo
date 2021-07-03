@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Storage {
-
     File folder = Echo.INSTANCE.getDataFolder();
     String location = "staff.json";
     Map<String, String> users;
@@ -23,7 +22,6 @@ public class Storage {
     public Storage() {
         users = new HashMap<String, String>();
     }
-
 
     public void exportConfig() {
         File file = new File(folder, location);
@@ -59,7 +57,7 @@ public class Storage {
                 fileWriter.write(mainObject.toJSONString());
                 fileWriter.close();
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
 
         File newFile = new File(folder, location);
@@ -80,7 +78,7 @@ public class Storage {
                 e.printStackTrace();
             }
 
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException ignored) {
         }
 
 
@@ -95,10 +93,7 @@ public class Storage {
 
     public void addConsole(String key) {
         users.put("console", key);
-
-        new Thread(() -> {
-            exportConfig();
-        }).start();
+        exportConfig();
     }
 
     public Boolean keyUsed(String key){
@@ -114,10 +109,7 @@ public class Storage {
 
     public void addUser(String uuid, String key) {
         users.put(uuid, key);
-
-        new Thread(() -> {
-            exportConfig();
-        }).start();
+        exportConfig();
     }
 
 }

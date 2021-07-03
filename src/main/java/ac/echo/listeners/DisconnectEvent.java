@@ -11,8 +11,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffectType;
 
 public class DisconnectEvent implements Listener {
+    private Echo echo;
+
+    public DisconnectEvent(Echo echo) {
+        this.echo = echo;
+    }
+
     private void onDisconnect(final Player player) {
-        Profile profile = Echo.INSTANCE.getProfileManager().getProfile(player.getUniqueId());
+        Profile profile = echo.getProfileManager().getProfile(player.getUniqueId());
 
         if (profile.isFrozen()) {
             player.setFlying(false);

@@ -5,8 +5,8 @@ import ac.echo.classes.API;
 import ac.echo.classes.EchoClient;
 import ac.echo.commands.BaseCommand;
 import ac.echo.profile.Profile;
+import ac.echo.utils.ThreadUtil;
 import ac.echo.utils.TimeUtil;
-import com.neovisionaries.ws.client.WebSocketException;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -15,12 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.concurrent.*;
 
 public class FreezeCommand extends BaseCommand {
 
@@ -42,7 +37,7 @@ public class FreezeCommand extends BaseCommand {
     }
 
     private void doEverything(CommandSender sender, String[] args) {
-        new Thread(() -> {
+        ThreadUtil.runTask(true, echo, () -> {
             if (!sender.hasPermission("echo.pin")) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         echo.getConfig().getString("NO_PERMISSION")));
@@ -205,7 +200,7 @@ public class FreezeCommand extends BaseCommand {
                 target.setSprinting(true);
                 target.removePotionEffect(PotionEffectType.JUMP);
             }
-        }).start();
+        });
 
     }
 
@@ -239,7 +234,7 @@ public class FreezeCommand extends BaseCommand {
         }
 
         String finalLink = link;
-        new Thread(() -> {
+        ThreadUtil.runTask(true, echo, () -> {
             while (true) {
                 try {
                     Thread.sleep(echo.getConfig().getInt("FREEZE_COMMAND.SEND_MESSAGE_EVERY"));
@@ -274,15 +269,15 @@ public class FreezeCommand extends BaseCommand {
                                     .replace("{link}", finalLink)));
                 }
             }
-        }).start();
+        });
 
         String pinFinal = pin;
-        new Thread(() -> {
+        ThreadUtil.runTask(true, echo, () -> {
             try {
-                EchoClient.connect(pinFinal, sender, target);
+                EchoClient.connect(echo, pinFinal, sender, target);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }).start();
+        });
     }
 }

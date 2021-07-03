@@ -2,7 +2,10 @@ package ac.echo;
 
 import ac.echo.classes.Storage;
 import ac.echo.commands.BaseCommand;
-import ac.echo.commands.impl.*;
+import ac.echo.commands.impl.AltsCommand;
+import ac.echo.commands.impl.EchoCommand;
+import ac.echo.commands.impl.FreezeCommand;
+import ac.echo.commands.impl.KeyCommand;
 import ac.echo.listeners.DisconnectEvent;
 import ac.echo.listeners.FreezeListener;
 import ac.echo.listeners.LoginEvent;
@@ -15,7 +18,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
@@ -39,7 +41,7 @@ public class Echo extends JavaPlugin {
     public void onEnable() {
         INSTANCE = this;
 
-        profileManager = new Manager(this);
+        profileManager = new Manager();
 
         commands = new HashSet<>();
 
@@ -59,14 +61,14 @@ public class Echo extends JavaPlugin {
             e.printStackTrace();
         }
 
-        getServer().getPluginManager().registerEvents(new DisconnectEvent(), this);
-        getServer().getPluginManager().registerEvents(new LoginEvent(), this);
-        getServer().getPluginManager().registerEvents(new FreezeListener(), this);
+        getServer().getPluginManager().registerEvents(new DisconnectEvent(this), this);
+        getServer().getPluginManager().registerEvents(new LoginEvent(this), this);
+        getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
 
         registerCommand(new EchoCommand(this));
 
         if (getConfig().getBoolean("FREEZE_COMMAND.PLAYER_MOVE_EVENT")) {
-            getServer().getPluginManager().registerEvents(new MoveEvent(), this);
+            getServer().getPluginManager().registerEvents(new MoveEvent(this), this);
         }
 
         if (getConfig().getBoolean("ALTS_COMMAND.ENABLED")) {
@@ -85,7 +87,7 @@ public class Echo extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getOnlinePlayers().forEach(player -> {
-            final Profile profile = getProfileManager().getProfile(player.getUniqueId());
+            Profile profile = getProfileManager().getProfile(player.getUniqueId());
             if (profile.isFrozen()) {
                 player.setFlying(false);
                 player.setWalkSpeed(0.2F);
@@ -96,7 +98,7 @@ public class Echo extends JavaPlugin {
         });
 
         storage.exportConfig();
-        this.getServer().getScheduler().cancelTasks(this);
+        getServer().getScheduler().cancelTasks(this);
     }
 
 

@@ -3,6 +3,7 @@ package ac.echo.commands.impl;
 import ac.echo.Echo;
 import ac.echo.classes.API;
 import ac.echo.commands.BaseCommand;
+import ac.echo.utils.ThreadUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ public class KeyCommand extends BaseCommand {
     }
 
     private void updateKey(CommandSender sender, String key){
-        new Thread(() -> {
+        ThreadUtil.runTask(true, echo, () -> {
             API api = new API();
 
             if (sender instanceof Player) {
@@ -65,6 +66,6 @@ public class KeyCommand extends BaseCommand {
                     sender.sendMessage(ChatColor.RED + "Invalid Key!");
                 }
             }
-        }).start();
+        });
     }
 }

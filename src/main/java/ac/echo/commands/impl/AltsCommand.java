@@ -3,10 +3,8 @@ package ac.echo.commands.impl;
 import ac.echo.Echo;
 import ac.echo.classes.API;
 import ac.echo.commands.BaseCommand;
-import ac.echo.profile.Profile;
+import ac.echo.utils.ThreadUtil;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,7 +24,7 @@ public class AltsCommand extends BaseCommand {
     }
 
     public void doEverything(CommandSender sender, String[] args) {
-        new Thread(() -> {
+        ThreadUtil.runTask(true, echo, () -> {
             if (!sender.hasPermission("echo.alts")) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         echo.getConfig().getString("NO_PERMISSION")));
@@ -57,20 +55,15 @@ public class AltsCommand extends BaseCommand {
                     return;
                 }
 
-                final boolean[] isValidKey = {false};
-                new Thread(() -> {
-                    API api = new API();
-                    isValidKey[0] = !api.isValidKey(echo.getStorage().getConsole());
-                }).start();
-
-                if (isValidKey[0]) {
+                API api = new API();
+                if (!api.isValidKey(echo.getStorage().getConsole())) {
                     sender.sendMessage(ChatColor.RED + "Your API Key is no longer valid. Please set it again using /key <api-key>");
                     return;
                 }
             }
 
             getAlts(args[0], sender);
-        }).start();
+        });
     }
 
     private void getAlts(String p, CommandSender sender) {
