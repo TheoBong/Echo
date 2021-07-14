@@ -5,12 +5,12 @@ import org.bukkit.command.CommandSender;
 
 public abstract class BaseCommand extends Command {
 
-    public BaseCommand(final String name) {
+    public BaseCommand(String name) {
         super(name);
     }
 
     @Override
-    public final boolean execute(final CommandSender sender, final String alias, final String[] args) {
+    public boolean execute(CommandSender sender, String alias, String[] args) {
         this.execute(sender, args);
         return true;
     }

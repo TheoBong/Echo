@@ -17,7 +17,7 @@ public class DisconnectEvent implements Listener {
         this.echo = echo;
     }
 
-    private void onDisconnect(final Player player) {
+    private void onDisconnect(Player player) {
         Profile profile = echo.getProfileManager().getProfile(player.getUniqueId());
 
         if (profile.isFrozen()) {
@@ -30,14 +30,14 @@ public class DisconnectEvent implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onKick(final PlayerKickEvent e) {
+    public void onKick(PlayerKickEvent e) {
         e.setLeaveMessage(null);
 
         this.onDisconnect(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onQuit(final PlayerQuitEvent e) {
+    public void onQuit(PlayerQuitEvent e) {
         e.setQuitMessage(null);
 
         this.onDisconnect(e.getPlayer());

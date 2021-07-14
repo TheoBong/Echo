@@ -23,11 +23,9 @@ import org.bukkit.potion.PotionEffectType;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.HashSet;
-import java.util.Set;
 
 public class Echo extends JavaPlugin {
     public static Echo INSTANCE;
-    private Set<BaseCommand> commands;
     private CommandMap commandMap;
     @Getter private Manager profileManager;
     @Getter @Setter Boolean serverScanning = false;
@@ -42,8 +40,6 @@ public class Echo extends JavaPlugin {
         INSTANCE = this;
 
         profileManager = new Manager();
-
-        commands = new HashSet<>();
 
         storage = new Storage();
         storage.importConfig();
@@ -102,9 +98,7 @@ public class Echo extends JavaPlugin {
     }
 
 
-    public Echo registerCommand(BaseCommand command) {
-        commands.add(command);
+    public void registerCommand(BaseCommand command) {
         commandMap.register(command.getName(), command);
-        return this;
     }
 }

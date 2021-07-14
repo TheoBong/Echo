@@ -7,19 +7,19 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class Manager {
-    @Getter private final HashMap<UUID, Profile> uuidProfiles = new HashMap<>();
+    @Getter private HashMap<UUID, Profile> uuidProfiles = new HashMap<>();
 
-    public Profile createProfile(final String name, final UUID uuid) {
-        final Profile playerProfile = new Profile(name, uuid);
+    public Profile createProfile(String name, UUID uuid) {
+        Profile playerProfile = new Profile(name, uuid);
         this.uuidProfiles.put(uuid, playerProfile);
         return playerProfile;
     }
 
-    public Profile getProfile(final Player player) {
+    public Profile getProfile(Player player) {
         return this.getProfile(player.getUniqueId());
     }
 
-    public Profile getProfile(final UUID uuid) {
+    public Profile getProfile(UUID uuid) {
         return this.uuidProfiles.get(uuid);
     }
 }
