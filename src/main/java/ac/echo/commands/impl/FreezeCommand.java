@@ -148,11 +148,13 @@ public class FreezeCommand extends BaseCommand {
                 walkSpeed = target.getWalkSpeed();
                 foodLevel = target.getFoodLevel();
 
-                target.setFlying(false);
-                target.setWalkSpeed(0.0F);
-                target.setFoodLevel(0);
-                target.setSprinting(false);
-                target.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
+                Bukkit.getScheduler().runTask(echo, () -> {
+                    target.setFlying(false);
+                    target.setWalkSpeed(0.0F);
+                    target.setFoodLevel(0);
+                    target.setSprinting(false);
+                    target.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200));
+                });
 
                 if (pin != 0) {
                     String pinString = String.valueOf(pin);
@@ -194,11 +196,14 @@ public class FreezeCommand extends BaseCommand {
                 sender.sendMessage(ChatColor.GREEN + "Successfully unfroze " + target.getName());
 
                 target.sendMessage(ChatColor.GREEN + "You have been unfrozen.");
-                target.setFlying(wasFlying);
-                target.setWalkSpeed(walkSpeed);
-                target.setFoodLevel(foodLevel);
-                target.setSprinting(true);
-                target.removePotionEffect(PotionEffectType.JUMP);
+
+                Bukkit.getScheduler().runTask(echo, () -> {
+                    target.setFlying(wasFlying);
+                    target.setWalkSpeed(walkSpeed);
+                    target.setFoodLevel(foodLevel);
+                    target.setSprinting(true);
+                    target.removePotionEffect(PotionEffectType.JUMP);
+                });
             }
         });
 
