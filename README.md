@@ -45,7 +45,7 @@ Please make sure to have bug fixes/improvements in seperate pull requests from n
 #### TODO
 * More spigot jar support
 * More testing
-* Make all API Requests Async
+* Make all API Requests Async (done)
 
 ## License
 Echo Plugin is licensed under the permissive MIT license. Please see [`LICENSE.txt`](https://github.com/Cowings/Echo/blob/master/LICENSE.txt) for more info.
