@@ -38,7 +38,7 @@ public class FreezeCommand extends BaseCommand {
 
     private void doEverything(CommandSender sender, String[] args) {
         ThreadUtil.runTask(true, echo, () -> {
-            if (!sender.hasPermission("echo.pin")) {
+            if (!sender.hasPermission(echo.getConfig().getString("FREEZE_COMMAND.PERMISSION"))) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         echo.getConfig().getString("NO_PERMISSION")));
                 return;

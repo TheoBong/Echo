@@ -2,6 +2,8 @@ package ac.echo.listeners;
 
 import ac.echo.Echo;
 import ac.echo.profile.Profile;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,6 +23,12 @@ public class DisconnectEvent implements Listener {
         Profile profile = echo.getProfileManager().getProfile(player.getUniqueId());
 
         if (profile.isFrozen()) {
+            for (Player staff : Bukkit.getOnlinePlayers()) {
+                if (staff.hasPermission(echo.getConfig().getString("FREEZE_COMMAND.PERMISSION"))) {
+                    staff.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l" + player + " has disconnected while frozen!"));
+                }
+            }
+
             player.setFlying(false);
             player.setWalkSpeed(0.2F);
             player.setFoodLevel(20);

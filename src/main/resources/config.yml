@@ -5,6 +5,7 @@ NO_PERMISSION: "&cNo permission"
 ALTS_COMMAND:
   ENABLED: true
   MAIN_COMMAND: "alts"
+  PERMISSION: "echo.alts"
   ALIASES:
     - "aliases"
     - "alias"
@@ -14,6 +15,7 @@ ALTS_COMMAND:
 FREEZE_COMMAND:
   ENABLED: true
   MAIN_COMMAND: "freeze"
+  PERMISSION: "echo.staff"
   ALIASES:
     - "ss"
     - "screenshare"
@@ -38,3 +40,8 @@ FREEZE_COMMAND:
     AUTOBAN_COMMAND_CONSOLE: false #True = will send command thru console | False = will send command thru whoever the dispatched command.
 KEY_COMMAND:
   ENABLED: true
+  MAIN_COMMAND: "key"
+  ALIASES:
+    - "apikey"
+    - "echokey"
+  PERMISSION: "echo.staff"

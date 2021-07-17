@@ -25,7 +25,7 @@ public class AltsCommand extends BaseCommand {
 
     public void doEverything(CommandSender sender, String[] args) {
         ThreadUtil.runTask(true, echo, () -> {
-            if (!sender.hasPermission("echo.alts")) {
+            if (!sender.hasPermission(echo.getConfig().getString("ALTS_COMMAND.PERMISSION"))) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         echo.getConfig().getString("NO_PERMISSION")));
                 return;

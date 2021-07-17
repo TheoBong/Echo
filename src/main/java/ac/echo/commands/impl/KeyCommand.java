@@ -13,13 +13,14 @@ public class KeyCommand extends BaseCommand {
     private Echo echo;
 
     public KeyCommand(Echo echo) {
-        super("key");
+        super(echo.getConfig().getString("KEY_COMMAND.MAIN_COMMAND"));
         this.echo = echo;
+        setAliases(echo.getConfig().getStringList("KEY_COMMAND.ALIASES"));
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("echo.staff")) {
+        if (!sender.hasPermission(echo.getConfig().getString("KEY_COMMAND.PERMISSION"))) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     echo.getConfig().getString("NO_PERMISSION")));
             return;
