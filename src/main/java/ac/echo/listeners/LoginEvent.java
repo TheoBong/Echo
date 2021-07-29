@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 public class LoginEvent implements Listener {
-    private Echo echo;
+    private final Echo echo;
 
     public LoginEvent(Echo echo) {
         this.echo = echo;

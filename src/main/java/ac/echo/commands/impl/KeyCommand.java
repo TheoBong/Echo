@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 public class KeyCommand extends BaseCommand {
 
-    private Echo echo;
+    private final Echo echo;
 
     public KeyCommand(Echo echo) {
         super(echo.getConfig().getString("KEY_COMMAND.MAIN_COMMAND"));

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 public class AltsCommand extends BaseCommand {
 
-    private Echo echo;
+    private final Echo echo;
 
     public AltsCommand(Echo echo) {
         super(echo.getConfig().getString("ALTS_COMMAND.MAIN_COMMAND"));

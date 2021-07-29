@@ -32,7 +32,7 @@ public class API {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
-            StringBuffer content = new StringBuffer();
+            StringBuilder content = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
@@ -117,8 +117,7 @@ public class API {
             JSONObject json_response = (JSONObject)response;
 
             if ((Boolean)json_response.get("success")){
-                String scan = (String) ((JSONObject)json_response.get("result")).get("scans");
-                return scan;
+                return (String) ((JSONObject)json_response.get("result")).get("scans");
             } else {
                 sender.sendMessage(ChatColor.RED + "Error from Echo servers: " + json_response.get("message") + ".");
                 return null;
@@ -174,8 +173,7 @@ public class API {
             JSONObject json_response = (JSONObject) response;
 
             if ((Boolean)json_response.get("success")) {
-                String stylecode = (String) ((JSONObject) json_response.get("result")).get("styler_code");
-                return stylecode;
+                return (String) ((JSONObject) json_response.get("result")).get("styler_code");
             } else {
                 System.out.println("Error from Echo servers: " + json_response.get("message"));
                 return "";
@@ -204,8 +202,7 @@ public class API {
 
             if ((Boolean)json_response.get("success")) {
                 JSONObject object = (JSONObject) ((JSONObject) json_response.get("result")).get("plan");
-                String planName = (String) object.get("name");
-                return planName;
+                return (String) object.get("name");
             } else {
                 System.out.println("Error from Echo servers: " + json_response.get("message"));
                 return "";

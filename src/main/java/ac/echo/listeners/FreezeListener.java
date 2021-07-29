@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 public class FreezeListener implements Listener {
-    private Echo echo;
+    private final Echo echo;
 
     public FreezeListener(Echo echo) {
         this.echo = echo;

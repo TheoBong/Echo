@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffectType;
 
 public class DisconnectEvent implements Listener {
-    private Echo echo;
+    private final Echo echo;
 
     public DisconnectEvent(Echo echo) {
         this.echo = echo;

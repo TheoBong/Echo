@@ -14,13 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+@SuppressWarnings("unchecked")
 public class Storage {
-    File folder = Echo.INSTANCE.getDataFolder();
-    String location = "staff.json";
-    Map<String, String> users;
+    private final File folder;
+    private final String location = "staff.json";
+    private Map<String, String> users;
 
-    public Storage() {
-        users = new HashMap<String, String>();
+    public Storage(Echo echo) {
+        folder = echo.getDataFolder();
+        users = new HashMap<>();
     }
 
     public void exportConfig() {
@@ -35,7 +37,6 @@ public class Storage {
             FileWriter fileWriter = new FileWriter(file.getCanonicalFile());
             fileWriter.write(mainObject.toJSONString());
             fileWriter.close();
-
         } catch (IOException e) {
             Bukkit.getLogger().warning(e.getMessage());
             e.printStackTrace();
@@ -57,8 +58,7 @@ public class Storage {
                 fileWriter.write(mainObject.toJSONString());
                 fileWriter.close();
             }
-        } catch (IOException ignored) {
-        }
+        } catch (IOException ignored) {}
 
         File newFile = new File(folder, location);
 

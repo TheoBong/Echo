@@ -18,11 +18,11 @@ import java.io.IOException;
 public class EchoClient {
     private static final String SERVER = "wss://scanner.echo.ac";
 
-    public static WebSocket connect(Echo echo, String pin, CommandSender staff, Player target)
+    public static void connect(Echo echo, String pin, CommandSender staff, Player target)
             throws IOException, WebSocketException {
         String text = pin + "|no|progress";
 
-        return new WebSocketFactory().createSocket(SERVER).addProtocol("progress").addListener(new WebSocketAdapter() {
+        new WebSocketFactory().createSocket(SERVER).addProtocol("progress").addListener(new WebSocketAdapter() {
             @Override
             public void onTextMessage(WebSocket websocket, String message) {
                 if (message.equals("hello")) {
@@ -71,16 +71,16 @@ public class EchoClient {
                                             .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_1"))
                                     + "["
                                     + ChatColor.translateAlternateColorCodes('&',
-                                            echo.getConfig()
-                                                    .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_2"))
+                                    echo.getConfig()
+                                            .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_2"))
                                     + new String(new char[progress_value]).replace("\0", "|")
                                     + ChatColor.translateAlternateColorCodes('&',
-                                            echo.getConfig()
-                                                    .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_3"))
+                                    echo.getConfig()
+                                            .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_3"))
                                     + new String(new char[progress_value_remaining]).replace("\0", "|")
                                     + ChatColor.translateAlternateColorCodes('&',
-                                            echo.getConfig()
-                                                    .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_1"))
+                                    echo.getConfig()
+                                            .getString("FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR_COLOR_1"))
                                     + "]";
 
                             PacketPlayOutChat packet = new PacketPlayOutChat(
@@ -89,8 +89,8 @@ public class EchoClient {
                                                     .replace("{progress}",
                                                             (echo.getConfig().getBoolean(
                                                                     "FREEZE_COMMAND.STAFF_ACTION_BAR_PROGRESS_BAR")
-                                                                            ? progress_bar
-                                                                            : progress))))),
+                                                                    ? progress_bar
+                                                                    : progress))))),
                                     (byte) 2);
                             ((CraftPlayer) staff).getHandle().playerConnection.sendPacket(packet);
                         } catch (NumberFormatException ignored) {

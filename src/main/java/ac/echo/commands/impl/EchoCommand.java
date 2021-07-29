@@ -1,17 +1,12 @@
 package ac.echo.commands.impl;
 
-import ac.echo.Echo;
 import ac.echo.commands.BaseCommand;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class EchoCommand extends BaseCommand {
-
-    private Echo echo;
-
-    public EchoCommand(Echo echo) {
+    public EchoCommand() {
         super("echo");
-        this.echo = echo;
     }
 
     @Override

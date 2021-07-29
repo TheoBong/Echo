@@ -22,29 +22,24 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.HashSet;
 
 public class Echo extends JavaPlugin {
-    public static Echo INSTANCE;
     private CommandMap commandMap;
     @Getter private Manager profileManager;
-    @Getter @Setter Boolean serverScanning = false;
+    @Getter @Setter private boolean serverScanning = false;
 
     @Getter Storage storage;
 
-    File configFile;
     @Getter private YamlConfiguration config;
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
-
         profileManager = new Manager();
 
-        storage = new Storage();
+        storage = new Storage(this);
         storage.importConfig();
 
-        configFile = new File(getDataFolder(), "config.yml");
+        File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) saveResource("config.yml", false);
         config = YamlConfiguration.loadConfiguration(configFile);
 
@@ -61,7 +56,7 @@ public class Echo extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LoginEvent(this), this);
         getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
 
-        registerCommand(new EchoCommand(this));
+        registerCommand(new EchoCommand());
 
         if (getConfig().getBoolean("FREEZE_COMMAND.PLAYER_MOVE_EVENT")) {
             getServer().getPluginManager().registerEvents(new MoveEvent(this), this);

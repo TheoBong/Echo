@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class MoveEvent implements Listener {
-    private Echo echo;
+    private final Echo echo;
 
     public MoveEvent(Echo echo) {
         this.echo = echo;

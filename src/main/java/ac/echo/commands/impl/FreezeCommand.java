@@ -19,7 +19,7 @@ import java.util.Base64;
 
 public class FreezeCommand extends BaseCommand {
 
-    private Echo echo;
+    private final Echo echo;
 
     private boolean wasFlying = false;
     private float walkSpeed = 0.2F;
@@ -33,7 +33,7 @@ public class FreezeCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        doEverything(sender, args); //made everything async lmao
+        doEverything(sender, args);
     }
 
     private void doEverything(CommandSender sender, String[] args) {
@@ -126,7 +126,7 @@ public class FreezeCommand extends BaseCommand {
                         return;
                     }
 
-                    if (echo.getServerScanning()) {
+                    if (echo.isServerScanning()) {
                         sender.sendMessage(ChatColor.RED + "Console is already scanning someone!");
                         return;
                     }
