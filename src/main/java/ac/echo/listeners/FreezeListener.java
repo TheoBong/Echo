@@ -50,6 +50,9 @@ public class FreezeListener implements Listener {
         if (event.getDamager() instanceof Player) {
             Player p = (Player) event.getDamager();
             Profile profile = echo.getProfileManager().getProfile(p.getUniqueId());
+
+            if (profile == null) return;
+
             if (profile.isFrozen()) {
                 event.setCancelled(true);
             }
