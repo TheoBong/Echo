@@ -1,7 +1,7 @@
 # Echo Spigot Plugin
 Echo is a screenshare tool for catching cheaters in minecraft. This plugin allows you to more efficently run scans through echo directly through the server.
 
-To download the plugin, visit: https://github.com/Cowings/Echo/releases
+To download the plugin, visit: https://github.com/TheoBong/Echo/releases
 You must have an API Key to use this. Get an Echo API Key by purchasing an Echo License here: https://echo.ac/#pricing
 
 Features:
@@ -13,8 +13,8 @@ Features:
 
 ## Frequently Asked Questions
 * **Why do I have to specify a pin in freeze command?** - this is because you have a personal license, enterprise users can auto-generate a pin.
-* **Where do I get my API key?** - https://github.com/Cowings/Echo/wiki#setup-process-each-moderator-must-do-this
-* **I found a bug, what do I do?** - open a new issue at https://github.com/Cowings/Echo/issues
+* **Where do I get my API key?** - https://github.com/TheoBong/Echo/wiki#setup-process-each-moderator-must-do-this
+* **I found a bug, what do I do?** - open a new issue at https://github.com/TheoBong/Echo/issues
 * **Where can I find Echo's REST API documentation?** - https://dash.echo.ac/docs
 
 
@@ -29,7 +29,7 @@ Echo Plugin uses Maven to handle dependencies & building.
 
 #### Compiling from source
 ```sh
-git clone https://github.com/Cowings/Echo
+git clone https://github.com/TheoBong/Echo
 cd Echo/
 mvn clean install
 ```
@@ -48,4 +48,4 @@ Please make sure to have bug fixes/improvements in seperate pull requests from n
 * Make all API Requests Async (done)
 
 ## License
-Echo Plugin is licensed under the permissive MIT license. Please see [`LICENSE.txt`](https://github.com/Cowings/Echo/blob/master/LICENSE.txt) for more info.
+Echo Plugin is licensed under the permissive MIT license. Please see [`LICENSE.txt`](https://github.com/TheoBong/Echo/blob/master/LICENSE.txt) for more info.
