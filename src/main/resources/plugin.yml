@@ -2,4 +2,4 @@ name: Echo
 version: ${echo.desc}
 description: Echo Screenshare Tool Plugin
 main: ac.echo.Echo
-author: [Cow, Josh]
+author: [Theo, Josh]
