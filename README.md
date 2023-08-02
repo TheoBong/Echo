@@ -1,3 +1,8 @@
+### WARNING (READ READ READ)
+Screenshare tools in general, including Echo are severe privacy violations and have been known to be exploited. I would HIGHLY HIGHLY recommend not forcing players to use screenshare tools unless your server is a VERY competetive environment with money involved. Read more about the exploit here: https://ioctl.fail/echo-ac-writeup/
+
+This repository is not affiliated Inspect Element Ltd. I do not condone the program and this repository is simply an archive for demonstrating their API.
+
 # Echo Spigot Plugin
 Echo is a screenshare tool for catching cheaters in minecraft. This plugin allows you to more efficently run scans through echo directly through the server.
 
